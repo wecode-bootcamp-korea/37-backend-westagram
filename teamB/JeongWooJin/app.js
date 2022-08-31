@@ -84,7 +84,7 @@ myDataSource.initialize()
 
   //health check
   app.get("/ping", (req, res) => {
-    res.status(201).json({"message" : "pong"});
+    res.status(200).json({"message" : "pong"});
   })
 
   const start = async () => {
