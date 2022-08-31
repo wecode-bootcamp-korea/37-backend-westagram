@@ -34,7 +34,7 @@ app.get('/ping', cors(), function(req, res, next){
 })
 
 app.post("/users", async(req, res, next) => {
-  const {name, email, profile_image, password} = req.body;
+  const {name, email, profile_image, password} = req.body; 
   await myDataSource.query(
     `INSERT INTO users(name, email, profile_image, password)
     values(?, ?, ?, ?);`,
@@ -43,28 +43,6 @@ app.post("/users", async(req, res, next) => {
   res.status(201).json({"message" : "userCreated"});
 })
 
-app.post("/posts", async(req, res, next) => {
-  const {title, content, user_id} = req.body;
-  await myDataSource.query(
-    `INSERT INTO posts(title, content, user_id)
-    values(?, ?, ?);`,
-    [title, content, user_id]
-  );
-  res.status(201).json({"message" : "postCreated"});
-})
-
-app.get('/lookup', async(req, res) =>{
-  await myDataSource.manager.query(
-    `SELECT 
-    users.id, users.profile_image, posts.id, posts.user_id, posts.title, posts.content 
-    FROM users, posts
-    WHERE users.id = posts.user_id`
-    ,(err, rows) => {
-      res.status(200).json({"data" : rows});
-    }
-    
-  )
-})
 
 
 const start = async () => {
