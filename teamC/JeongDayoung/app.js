@@ -45,7 +45,7 @@ app.get('/lookup', async(req, res) =>{
     }
   )
 });
-
+ 
 app.get('/userInfo/:user_id', async(req, res) =>{
   const userId = req.params.user_id;
   const result = {};
@@ -89,7 +89,7 @@ app.post("/posts", async(req, res, next) => {
   res.status(201).json({"message" : "postCreated"});
 })
 
-app.patch("/editPost/:post_id", async(req, res, next) => {
+app.patch("/editPost/:post_id", async(req, res, next) => { // next의 역할은 무엇인가?
    const postId = req.params.post_id;
    const {title, content} = req.body;
    await myDataSource.query(
@@ -103,11 +103,19 @@ app.patch("/editPost/:post_id", async(req, res, next) => {
     FROM posts
     WHERE id = ${postId}`
     ,(err, rows) => {
-      res.status(200).json({"data" : rows});
+      res.status(200).json({"data" : rows});s
     }
   );
 })
 
+app.delete('/delPost/:post_id', async(req, res) =>{
+  const postId = req.params.post_id;
+  await myDataSource.manager.query(
+    `DELETE FROM posts
+    WHERE id = ${postId}`
+  );
+  res.status(203).json({"message" : "postingDeleted"});
+});
 
 
 
