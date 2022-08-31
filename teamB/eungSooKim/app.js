@@ -31,20 +31,23 @@ const PORT = process.env.PORT;
 
 
 app.get("/ping", (req, res) => {
-    const { title, description, coverImage} = req.body
-    
-	await myDataSource.query(
-		`INSERT INTO books(
-		    title,
-		    description,
-		    cover_image
-		) VALUES (?, ?, ?);
-		`,
-		[ title, description, coverImage ]
-	); 
-     res.status(201).json({ message : "successfully created" });
-	})
+    res.json({ message : "pong"});
+})
 
+app.post("/users", async (req, res, next) => {
+    const { name, email, password } = req.body
+   
+    await database.query(
+        `INSERT INTO users(
+            name,
+            email,
+            password
+        ) VALUES (?, ?, ?);
+        `,
+        [ name, email, password ]
+    ); 
+     res.status(201).json({ message : "userCreated" });
+    })
 
 const start = async () => {
     server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
