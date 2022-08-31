@@ -89,6 +89,25 @@ app.post("/posts", async(req, res, next) => {
   res.status(201).json({"message" : "postCreated"});
 })
 
+app.patch("/editPost/:post_id", async(req, res, next) => {
+   const postId = req.params.post_id;
+   const {title, content} = req.body;
+   await myDataSource.query(
+     `UPDATE posts 
+     SET title = ?, content = ? 
+     WHERE id = ${postId};`,
+     [title, content]
+   );
+   await myDataSource.manager.query(
+    `SELECT * 
+    FROM posts
+    WHERE id = ${postId}`
+    ,(err, rows) => {
+      res.status(200).json({"data" : rows});
+    }
+  );
+})
+
 
 
 
