@@ -89,6 +89,17 @@ app.post("/posts", async(req, res, next) => {
   res.status(201).json({"message" : "postCreated"});
 })
 
+app.post("/likes/:user_id", async(req, res, next) => {
+  userId = req.params.user_id;
+  const {post_id} = req.body;
+  await myDataSource.query(
+    `INSERT INTO likes(user_id, post_id)
+    values(${userId}, ?);`,
+    [post_id]
+  );
+  res.status(201).json({"message" : "likeCreated"});
+})
+
 app.patch("/editPost/:post_id", async(req, res, next) => { // next의 역할은 무엇인가?
    const postId = req.params.post_id;
    const {title, content} = req.body;
@@ -116,8 +127,6 @@ app.delete('/delPost/:post_id', async(req, res) =>{
   );
   res.status(203).json({"message" : "postingDeleted"});
 });
-
-
 
 const start = async () => {
   server.listen(PORT, () => console.log(`erviser is listening on  ${PORT}`))
