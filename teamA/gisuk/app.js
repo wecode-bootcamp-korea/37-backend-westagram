@@ -33,7 +33,7 @@ app.get("/ping", (req,res) => {
   res.status(200).json({"message" : "pong"});
 })
 
-app.get("/users", async (req,res) => {
+app.get("/user", async (req,res) => {
   await appDataSource.query(
     `SELECT 
     users.name,
@@ -45,7 +45,7 @@ app.get("/users", async (req,res) => {
     })
 });
 
-app.get("/users/posts/:user_id", async (req,res) => {
+app.get("/user/post/:user_id", async (req,res) => {
   const user_id = req.params.user_id;
   await appDataSource.query(
     `select 
@@ -78,7 +78,7 @@ app.get("/post", async (req,res) => {
     posts.content as postingContent
     from posts inner join users on posts.user_id = users.id;`,
     (err, rows) => {
-      res.status(200).json({data :rows[1]});
+      res.status(200).json({data :rows});
   })
 })
 
@@ -90,8 +90,7 @@ app.post("/user", async (req, res, next) => {
     email,
     profile_image,
     password
-    ) VALUES (?, ?, ?, ?);
-    `,
+    ) VALUES (?, ?, ?, ?);`,
     [name, email, profile_image, password]
     );
   res.status(201).json({message : "userCreated"});
@@ -104,11 +103,35 @@ app.post("/post", async (req, res, next) => {
     title,
     content,
     user_id
-    ) VALUES (?, ?, ?);
-    `,
+    ) VALUES (?, ?, ?);`,
     [title, content, user_id]
   );
   res.status(201).json({message : "postCreated"});
+})
+
+app.patch("/post/:post_id", async (req, res, next) => {
+  const post_id = req.params.post_id;
+  const {title, content, user_id} =req.body
+  await appDataSource.query(
+    `UPDATE posts SET
+    title = ?,
+    content = ?,
+    user_id = ?
+    WHERE id = ${post_id}`,
+    [title, content, user_id]
+  );
+  await appDataSource.query(
+    `SELECT
+    users.id as userId,
+    users.name as userName,
+    posts.id as postingId,
+    posts.title as postingTitle,
+    posts.content as postingContent
+    from posts inner join users on users.id = posts.user_id where posts.id like ${post_id};`,
+    (err, rows) => {
+      res.status(200).json({data : rows[0]});
+    }
+  )
 })
 
 const start = async () => {
