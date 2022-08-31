@@ -49,6 +49,31 @@ myDataSource.initialize()
       })
   });
 
+  app.get("/users/:user_id", async (req,res) => {
+    const user_id = req.params.user_id;
+    console.log(user_id)
+    await myDataSource.query(
+      `select 
+      users.id as userId,
+      users.profile_image as userProfileImage,
+      posts.id as postingId,
+      posts.title as postingTitle,
+      posts.content as postingContent 
+      from posts inner join users on posts.user_id = users.id where users.id like ${user_id};
+      `,
+      (err, rows) => {
+        console.log(rows)
+        const posting = [];
+        rows.map((el) => {
+          posting.push({postingId : user_id, postingTitle : el.postingTitle, postingContent : el.postingContent
+          })
+        })
+        result = { userId : user_id, userProfileImage : rows[0].userProfileImage, postings : posting}
+        res.status(200).json({data : result});
+      }
+    )
+  })
+
   app.get("/post", async (req,res) => {
     await myDataSource.query(
       `select
@@ -59,7 +84,8 @@ myDataSource.initialize()
       posts.content as postingContent
       from posts inner join users on posts.user_id = users.id;`,
       (err, rows) => {
-        res.status(200).json(rows);
+        console.log(rows)
+        res.status(200).json({data :rows[1]});
       })
   })
 
