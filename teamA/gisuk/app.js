@@ -36,7 +36,6 @@ myDataSource.initialize()
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })
-  console.log(PORT)
 
   app.get("/users", async (req,res) => {
     await myDataSource.query(
@@ -66,7 +65,7 @@ myDataSource.initialize()
         `,
         [name, email, profile_image, password]
       );
-    res.status(201).json({message : "succesfully created"});
+    res.status(201).json({message : "usercreated"});
   })
 
 const start = async () => {
