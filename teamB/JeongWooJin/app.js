@@ -52,8 +52,6 @@ appDataSource.initialize()
       res.status(201).json({ "message" : "userCreated"});
   })
 
-//////////////
-
   app.post("/posts", async (req, res, next) => {
     const { title, content, user_id } = req.body;
 
@@ -70,6 +68,17 @@ appDataSource.initialize()
       res.status(201).json({ "message" : "postCreated"});
   })
 
+app.get('/lookup', async(req, res) => {
+  await appDataSource.manager.query(
+    `SELECT
+        posts.id, posts.title, posts.user_id, posts.content, users.id, users.profile_image
+        FROM posts, users
+        WHERE posts.user_id = users.id;`
+    ,(err, rows) => {
+            res.status(200).json({"data":rows});
+    })
+});
+
 
 
   const start = async () => {
@@ -81,4 +90,6 @@ appDataSource.initialize()
   };
   
   start();
+
+
 
