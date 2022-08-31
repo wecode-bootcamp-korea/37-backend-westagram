@@ -31,8 +31,19 @@ const PORT = process.env.PORT;
 
 
 app.get("/ping", (req, res) => {
-    res.json({ message : "pong"});
-})
+    const { title, description, coverImage} = req.body
+    
+	await myDataSource.query(
+		`INSERT INTO books(
+		    title,
+		    description,
+		    cover_image
+		) VALUES (?, ?, ?);
+		`,
+		[ title, description, coverImage ]
+	); 
+     res.status(201).json({ message : "successfully created" });
+	})
 
 
 const start = async () => {
