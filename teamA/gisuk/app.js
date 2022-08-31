@@ -109,6 +109,19 @@ app.post("/post", async (req, res, next) => {
   res.status(201).json({message : "postCreated"});
 })
 
+app.post("/likes/:user_id", async (req, res, next) => {
+  const user_id = req.params.user_id;
+  const {post_id} = req.body;
+  await appDataSource.query(
+    `INSERT INTO likes(
+      user_id,
+      post_id
+      ) VALUES (${user_id}, ?);`,
+      [post_id]
+  );
+  res.status(201).json({message: "likeCreated"});
+})
+
 app.patch("/post/:post_id", async (req, res, next) => {
   const post_id = req.params.post_id;
   const {title, content, user_id} =req.body
