@@ -46,13 +46,25 @@ myDataSource.initialize()
       FROM users`,
       (err, rows) => {
         res.status(200).json(rows);
-      }
-    )
+      })
   });
+
+  app.get("/post", async (req,res) => {
+    await myDataSource.query(
+      `select
+      users.id as userId,
+      users.profile_image as userProfileImage,
+      posts.id as postingId,
+      posts.title as postingTitle,
+      posts.content as postingContent
+      from posts inner join users on posts.user_id = users.id;`,
+      (err, rows) => {
+        res.status(200).json(rows);
+      })
+  })
 
   app.post("/user", async (req, res, next) => {
     const { name, email, profile_image, password} = req.body
-  
     await myDataSource.query(
       `INSERT INTO users(
         name,
