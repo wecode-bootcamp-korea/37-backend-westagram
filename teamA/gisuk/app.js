@@ -130,8 +130,15 @@ app.patch("/post/:post_id", async (req, res, next) => {
     from posts inner join users on users.id = posts.user_id where posts.id like ${post_id};`,
     (err, rows) => {
       res.status(200).json({data : rows[0]});
-    }
-  )
+    })
+})
+
+app.delete("/post/:post_id", async (req, res, next) => {
+  const post_id = req.params.post_id;
+  await appDataSource.query(
+    `DELETE FROM posts
+    WHERE posts.id = ${post_id}`);
+    res.status(200).json({message : "postingDeleted"})
 })
 
 const start = async () => {
