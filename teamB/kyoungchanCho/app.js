@@ -5,7 +5,8 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const { DataSource } =require('typeorm')
+const { DataSource } =require('typeorm');
+const { restart } = require('nodemon');
 
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -50,6 +51,22 @@ app.post("/users", async (req, res, next) => {
         [ name, email, profile_image, password ]
     );
     res.status(201).json({ message : "userCreated" })
+})
+
+app.post("/posts/:user_id", async (req, res, next) => {
+    const { title, content, user_id } = req.body
+    const userid = req.params.user_id;
+
+    await database.query(
+        `INSERT INTO posts(
+            title,
+            content,
+            user_id
+        ) VALUES (?, ?, ?);
+        `,
+        [ title, content, user_id ]
+    );
+    res.status(201).json({ message : "postCreated"})
 })
 
 const start = async () => {
