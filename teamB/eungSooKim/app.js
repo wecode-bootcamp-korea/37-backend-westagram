@@ -130,8 +130,21 @@ app.delete("/del/:postID", async(req,res) => {
 
     })
 
+    
+app.post("/like/:userID", async (req, res, next) => {
+    const { postID } = req.body
+    const userID = req.params.userID
 
-
+    await database.query(
+        `INSERT INTO likes(
+            post_id,
+            user_id
+        ) VALUES (?, ${userID});
+        `,
+        [postID]
+    );
+        res.status(201).json({ message : "likeCreated"});
+    })
 
 
 const start = async () => {
