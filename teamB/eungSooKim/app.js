@@ -18,9 +18,13 @@ const database = new DataSource({
 })
 
 database.initialize()
+    
     .then(() => {
         console.log("Data Source has been initialized!")
-    });
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
+    })
 
 
 app.use(express.json());
@@ -47,8 +51,9 @@ app.post("/users", async (req, res, next) => {
         `,
         [ name, email, password ]
     ); 
-     res.status(201).json({ message : "userCreated" });
+        res.status(201).json({ message : "userCreated" });
     })
+
 
 app.post("/posts/:userID", async (req, res, next) => {
     const { title, content } = req.body
@@ -130,7 +135,7 @@ app.delete("/del/:postID", async(req,res) => {
 
     })
 
-    
+
 app.post("/like/:userID", async (req, res, next) => {
     const { postID } = req.body
     const userID = req.params.userID
