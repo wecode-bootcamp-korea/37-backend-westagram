@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const { DataSource } = require('typeorm');
+const { DataSource, TypeORMError } = require('typeorm');
 
 const app = express();
 const PORT = process.env.PORT
@@ -82,7 +82,7 @@ app.get('/lookup', async(req, res) => {
 app.get('/userinfo/:user_id', async(req, res) => {
   const userId = req.params.user_id;
   const result = {};
-  const post_list = [];
+  const post_list = []; 
   await appDataSource.manager.query(
     `SELECT
         posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
@@ -102,6 +102,25 @@ app.get('/userinfo/:user_id', async(req, res) => {
             res.status(200).json({"data" : result});
     })
 });
+/////////////
+app.patch('/modifypost/:post_id', async(req, res) => {
+  const postId = req.params.post_id;
+  const { content } = req.body
+  await appDataSource.manager.query(`
+  UPDATE posts
+    SET content = ?
+    WHERE id = ${postId};`,
+    [content]
+  );
+  await appDataSource.manager.query(
+    `SELECT *
+    FROM posts
+    WHERE id = ${postId};`
+    ,(err, rows) => {
+            res.status(200).json({"data":rows});
+    })
+});
+////////
 
   const start = async () => {
     try {
