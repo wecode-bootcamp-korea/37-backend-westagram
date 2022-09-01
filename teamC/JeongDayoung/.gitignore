@@ -1,3 +1,7 @@
 node_modules/
 
 .env
+
+db.schema.sql
+
+.vscode
