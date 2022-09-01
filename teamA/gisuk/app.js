@@ -54,15 +54,22 @@ app.get("/user/post/:user_id", async (req,res) => {
     posts.id as postingId,
     posts.title as postingTitle,
     posts.content as postingContent 
-    from posts inner join users on posts.user_id = users.id where users.id like ${user_id};
-    `,
+    from posts inner join users on posts.user_id = users.id 
+    where users.id like ${user_id};`,
     (err, rows) => {
       const posting = [];
       rows.map((el) => {
-        posting.push({postingId : user_id, postingTitle : el.postingTitle, postingContent : el.postingContent
+        posting.push({
+          postingId : user_id, 
+          postingTitle : el.postingTitle, 
+          postingContent : el.postingContent
         })
       })
-    result = { userId : user_id, userProfileImage : rows[0].userProfileImage, postings : posting}
+    result = {
+      userId : user_id, 
+      userProfileImage : rows[0].userProfileImage, 
+      postings : posting
+    }
     res.status(200).json({data : result});
     }
   )
@@ -83,7 +90,7 @@ app.get("/post", async (req,res) => {
 })
 
 app.post("/user", async (req, res, next) => {
-  const { name, email, profile_image, password} = req.body
+  const { name, email, profile_image, password} = req.body;
   await appDataSource.query(
     `INSERT INTO users(
     name,
@@ -91,20 +98,20 @@ app.post("/user", async (req, res, next) => {
     profile_image,
     password
     ) VALUES (?, ?, ?, ?);`,
-    [name, email, profile_image, password]
+    [ name, email, profile_image, password ]
     );
   res.status(201).json({message : "userCreated"});
 })
 
 app.post("/post", async (req, res, next) => {
-  const { title, content, user_id} = req.body
+  const { title, content, user_id} = req.body;
   await appDataSource.query(
     `INSERT INTO posts(
     title,
     content,
     user_id
     ) VALUES (?, ?, ?);`,
-    [title, content, user_id]
+    [ title, content, user_id ]
   );
   res.status(201).json({message : "postCreated"});
 })
@@ -117,21 +124,21 @@ app.post("/likes/:user_id", async (req, res, next) => {
       user_id,
       post_id
       ) VALUES (${user_id}, ?);`,
-      [post_id]
+      [ post_id ]
   );
   res.status(201).json({message: "likeCreated"});
 })
 
 app.patch("/post/:post_id", async (req, res, next) => {
   const post_id = req.params.post_id;
-  const {title, content, user_id} =req.body
+  const {title, content, user_id} = req.body;
   await appDataSource.query(
     `UPDATE posts SET
     title = ?,
     content = ?,
     user_id = ?
     WHERE id = ${post_id}`,
-    [title, content, user_id]
+    [ title, content, user_id ]
   );
   await appDataSource.query(
     `SELECT
@@ -151,12 +158,12 @@ app.delete("/post/:post_id", async (req, res, next) => {
   await appDataSource.query(
     `DELETE FROM posts
     WHERE posts.id = ${post_id}`);
-    res.status(200).json({message : "postingDeleted"})
+    res.status(200).json({message : "postingDeleted"});
 })
 
 const start = async () => {
   try {
-    app.listen(PORT, () => console.log(`Server is listening on ${PORT} `));
+    app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
   } catch (err) {
     console.error(err);
   }
