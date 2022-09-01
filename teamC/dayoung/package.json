@@ -5,7 +5,7 @@
   "main": "nodemon app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "nodemon app.js"
+    "start": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +17,8 @@
     "cors": "^2.8.5",
     "dbmate": "^1.0.3",
     "dotenv": "^16.0.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "typeorm": "^0.3.9"
   }
 }
