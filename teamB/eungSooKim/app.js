@@ -34,6 +34,7 @@ app.get("/ping", (req, res) => {
     res.json({ message : "pong"});
     })
 
+
 app.post("/users", async (req, res, next) => {
     const { name, email, password } = req.body
    
@@ -49,20 +50,22 @@ app.post("/users", async (req, res, next) => {
      res.status(201).json({ message : "userCreated" });
     })
 
-app.post("/posts", async (req, res, next) => {
-    const { title, content, user_id } = req.body
+app.post("/posts/:userID", async (req, res, next) => {
+    const { title, content } = req.body
+    const userID = req.params.userID
 
     await database.query(
         `INSERT INTO posts(
             title,
             content,
             user_id
-        ) VALUES (?, ?, ?);
+        ) VALUES (?, ?, ${userID});
         `,
-        [ title, content, user_id ]
+        [ title, content ]
     );
         res.status(201).json({ message : "postCreated"});
     })
+
 
 app.get("/posts", async (req, res, next) => {
      
@@ -78,6 +81,7 @@ app.get("/posts", async (req, res, next) => {
         });
     })
 
+
 app.get("/userpost/:userID", async(req, res) => {
     const userID = req.params.userID;
     await database.query(
@@ -91,7 +95,8 @@ app.get("/userpost/:userID", async(req, res) => {
     	});
     })
 
-app.put('/post/:postID', async(req,res) => {
+
+app.put("/post/:postID", async(req,res) => {
     const { postingTitle, postingContent} = req.body;
     const postID = req.params.postID;
     await database.query(
@@ -113,6 +118,20 @@ app.put('/post/:postID', async(req,res) => {
         res.status(200).json(rows);
     	});
     })
+
+
+app.delete("/del/:postID", async(req,res) => {
+    const postID = req.params.postID;
+    await database.query(
+        `DELETE FROM posts
+         WHERE posts.id = ${postID}`
+    );
+    res.status(204).json({ message : "postingDeleted" })
+
+    })
+
+
+
 
 
 const start = async () => {
