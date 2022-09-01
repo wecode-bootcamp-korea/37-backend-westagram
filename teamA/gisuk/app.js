@@ -28,10 +28,36 @@ appDataSource.initialize()
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
-
+    
 app.get("/ping", (req,res) => {
   res.status(200).json({"message" : "pong"});
 })
+
+app.get("/users", async (req,res) => {
+  await appDataSource.query(
+    `SELECT 
+      users.name,
+      users.email,
+      users.profile_image
+    FROM users`,
+    (err, rows) => {
+      res.status(200).json(rows);
+    })
+});
+
+app.post("/users", async (req, res, next) => {
+  const { name, email, profile_image, password} = req.body  
+    await appDataSource.query(
+      `INSERT INTO users(
+          name,
+          email,
+          profile_image,
+          password
+        ) VALUES (?, ?, ?, ?);`,
+        [ name, email, profile_image, password ]
+      );
+    res.status(201).json({message : "userCreated"});
+  })
 
 const start = async () => {
   try {
