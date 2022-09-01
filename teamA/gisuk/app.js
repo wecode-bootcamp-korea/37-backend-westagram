@@ -42,8 +42,7 @@ app.get("/users", async (req,res) => {
     FROM users`,
     (err, rows) => {
       res.status(200).json(rows);
-    }
-  )
+    })
 });
 
 app.post("/users", async (req, res, next) => {
@@ -55,7 +54,7 @@ app.post("/users", async (req, res, next) => {
         profile_image,
         password
         ) VALUES (?, ?, ?, ?);`,
-        [name, email, profile_image, password]
+        [ name, email, profile_image, password ]
       );
     res.status(201).json({message : "userCreated"});
   })
