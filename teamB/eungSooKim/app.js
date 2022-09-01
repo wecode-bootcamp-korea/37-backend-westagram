@@ -32,7 +32,7 @@ const PORT = process.env.PORT;
 
 app.get("/ping", (req, res) => {
     res.json({ message : "pong"});
-})
+    })
 
 app.post("/users", async (req, res, next) => {
     const { name, email, password } = req.body
@@ -61,8 +61,36 @@ app.post("/posts", async (req, res, next) => {
         `,
         [ title, content, user_id ]
     );
-    res.status(201).json({ message : "postCreated"});
-})
+        res.status(201).json({ message : "postCreated"});
+    })
+
+app.get("/posts", async (req, res, next) => {
+     
+    await database.query(
+        `SELECT posts.user_id AS userId,
+                users.profile_image AS userProfileImage,
+                posts.id AS postingId,
+                posts.profile_image AS potingImageUrl,
+                posts.content As postingContent
+        FROM users JOIN posts ON users.id = posts.user_id`
+    ,(err, rows)=>{
+        res.status(200).json(rows);
+        });
+    })
+
+app.get('/userpost/:userID', async(req, res) => {
+    const { userID } = req.params
+    await database.query(
+	    `SELECT users.id AS userId,
+                users.profile_image AS userProfileId,
+                posts.id AS postingId, posts.title AS postingTitle,
+                posts.content AS postingContent
+        From posts JOIN users ON users.id = ${userID} AND users.id = posts.user_id`
+    ,(err, rows) => {
+        res.status(200).json(rows);
+    	});
+    })
+
 
 const start = async () => {
     server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
