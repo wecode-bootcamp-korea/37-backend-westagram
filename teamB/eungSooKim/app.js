@@ -72,20 +72,43 @@ app.get("/posts", async (req, res, next) => {
                 posts.id AS postingId,
                 posts.profile_image AS potingImageUrl,
                 posts.content As postingContent
-        FROM users JOIN posts ON users.id = posts.user_id`
+         FROM users JOIN posts ON users.id = posts.user_id`
     ,(err, rows)=>{
         res.status(200).json(rows);
         });
     })
 
-app.get('/userpost/:userID', async(req, res) => {
-    const { userID } = req.params
+app.get("/userpost/:userID", async(req, res) => {
+    const userID = req.params.userID;
     await database.query(
 	    `SELECT users.id AS userId,
                 users.profile_image AS userProfileId,
                 posts.id AS postingId, posts.title AS postingTitle,
                 posts.content AS postingContent
-        From posts JOIN users ON users.id = ${userID} AND users.id = posts.user_id`
+         From posts JOIN users ON users.id = ${userID} AND users.id = posts.user_id`
+    ,(err, rows) => {
+        res.status(200).json(rows);
+    	});
+    })
+
+app.put('/post/:postID', async(req,res) => {
+    const { postingTitle, postingContent} = req.body;
+    const postID = req.params.postID;
+    await database.query(
+        `UPDATE posts
+         SET title = ?,
+             content = ?
+         WHERE posts.id= ${postID}
+        `,[ postingTitle, postingContent ]
+    );
+    
+    await database.query(
+        `SELECT users.id AS userId,
+                users.name AS userName,
+                posts.id AS postingId,
+                posts.title AS postingTitle,
+                posts.content AS postingContent
+         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ${postID}`    
     ,(err, rows) => {
         res.status(200).json(rows);
     	});
