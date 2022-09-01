@@ -1,6 +1,6 @@
 -- migrate:up
 CREATE TABLE likes (
-    Id int not null AUTO_INCREMENT,
+    Id int not NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
     PRIMARY KEY (id),
