@@ -139,9 +139,11 @@ app.delete('/posts/:postId', async(req, res) => {
 // start server
 const start = async () => {
     try {
-        server.listen(PORT, () => console.log(`====Server is listening on ${PORT}====`));
+        server.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
     } catch (err) {
         throw err; //상위 컨텍스트로 에러 전파
+    } finally {
+        console.log('===========================================');
     }
 };
 
