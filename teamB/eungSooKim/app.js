@@ -21,6 +21,7 @@ database.initialize()
     .then(() => {
         console.log("Data Source has been initialized!")
     });
+    
 
 
 app.use(express.json());
