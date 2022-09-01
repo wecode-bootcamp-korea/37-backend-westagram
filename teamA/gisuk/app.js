@@ -36,9 +36,9 @@ app.get("/ping", (req,res) => {
 app.get("/users", async (req,res) => {
   await appDataSource.query(
     `SELECT 
-    users.name,
-    users.email,
-    users.profile_image
+      users.name,
+      users.email,
+      users.profile_image
     FROM users`,
     (err, rows) => {
       res.status(200).json(rows);
@@ -49,10 +49,10 @@ app.post("/users", async (req, res, next) => {
   const { name, email, profile_image, password} = req.body  
     await appDataSource.query(
       `INSERT INTO users(
-        name,
-        email,
-        profile_image,
-        password
+          name,
+          email,
+          profile_image,
+          password
         ) VALUES (?, ?, ?, ?);`,
         [ name, email, profile_image, password ]
       );
