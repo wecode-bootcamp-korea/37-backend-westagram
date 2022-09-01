@@ -30,21 +30,21 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.get("/ping", (req, res) => {
-  res.json({ message : "pong" });
+  res.status(200).json({ message : "pong" });
 })
 
 app.post("/signup", async (req, res, next) => {
   const { name, email, profileImage, password } = req.body
 
   await mysqlDataSource.query(
-    `INSERT INTO users(
+    `INSERT INTO usersWesta(
       name,
       email,
       profile_image,
       password
-    ) VALUES (?, ?, ?);
+    ) VALUES (?, ?, ?, ?);
     `,
-    [ name, email, profile_image, password ]
+    [ name, email, profileImage, password ]
   );
 
   res.status(201).json({ message : "Successfully created" });
