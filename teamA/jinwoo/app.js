@@ -29,18 +29,36 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-// health check
 app.get("/ping", (req, res) => {
   res.json({ message : "pong" });
 })
 
+app.post("/signup", async (req, res, next) => {
+  const { name, email, profileImage, password } = req.body
 
+  await mysqlDataSource.query(
+    `INSERT INTO users(
+      name,
+      email,
+      profile_image,
+      password
+    ) VALUES (?, ?, ?);
+    `,
+    [ name, email, profile_image, password ]
+  );
+
+  res.status(201).json({ message : "Successfully created" });
+})
 
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
 const start = async () => {
-    server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
+  try {
+    server.listen(PORT, () => console.log(`server is listening on ${PORT}`));
+} catch (err) {
+  console.error(err);
+}
 }
 
 start()
