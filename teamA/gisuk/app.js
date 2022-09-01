@@ -31,7 +31,7 @@ app.use(express.json());
 
 app.get("/ping", (req,res) => {
   res.status(200).json({"message" : "pong"});
-})
+});
 
 app.get("/user", async (req,res) => {
   await appDataSource.query(
