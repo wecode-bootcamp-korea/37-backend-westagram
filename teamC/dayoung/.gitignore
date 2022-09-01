@@ -1,0 +1,7 @@
+node_modules/
+
+db/schema.sql
+
+.env
+
+.vscode
