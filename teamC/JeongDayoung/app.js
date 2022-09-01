@@ -1,19 +1,17 @@
-dotenv.config();
-// Build-in package
-const http = require("http");
+require(dotenv).config();
 
-// 3rd-party package
+const http = require("http");
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const { DataSource } = require("typeorm");
-
 const app = express();
+
 app.use(express.json());
 app.use(morgan('dev'));
+app.use(cors());
 
-const myDataSource = new DataSource({
+const appDataSource = new DataSource({
   type : process.env.TYPEORM_CONNECTION,
   host : process.env.TYPEORM_HOST,
   port : process.env.TYPEORM_PORT,
@@ -22,12 +20,16 @@ const myDataSource = new DataSource({
   database : process.env.TYPEORM_DATABASE
 }) 
 
-myDataSource.initialize()
+appDataSource.initialize()
   .then(() => {
-    console.log("Data Source has been initialized!");
+      console.log("Data Source has been initialized!");
+  })
+  .catch((err) =>{
+     console.err("Error during Data Source initialization", err);
+      appDataSource.destroy()
   });
 
-app.get('/ping', cors(), function(req, res, next){
+app.get('/ping', function(req, res, next){
   res.json({message : 'pong'})
 })
 
