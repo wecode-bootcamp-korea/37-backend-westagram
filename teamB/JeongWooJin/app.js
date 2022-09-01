@@ -24,7 +24,7 @@ appDataSource.initialize()
   .catch((err) => {
       console.error("Error during Data Source initialization", err)
   appDataSource.destroy()
-  })
+  });
 
   app.use(cors());
   app.use(morgan('dev'));
@@ -78,8 +78,31 @@ app.get('/lookup', async(req, res) => {
             res.status(200).json({"data":rows});
     })
 });
-
-
+///////////////////
+app.get('/userinfo/:user_id', async(req, res) => {
+  const result = {};
+  const post_list = [];
+  const userId = req.params.user_id;
+  await appDataSource.manager.query(
+    `SELECT
+        posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
+        FROM posts, users
+        WHERE posts.user_id = users.id and posts.user_id = ${userId};`
+    ,(err, rows) => {
+            result["userId"] = rows[0].user_id;
+            result["userProfileImage"] = rows[0].profile_image;
+            rows.map (el => {
+              let tmp = {};
+              tmp.postId = el.post_id;
+              tmp.title = el.title;
+              tmp.content = el.content;
+              post_list.push(tmp);
+            })
+            result.postings = post_list;
+            res.status(200).json({"data" : result});
+    })
+});
+//////////////
 
   const start = async () => {
     try {
