@@ -18,10 +18,13 @@ const database = new DataSource({
 })
 
 database.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    });
 
+    .then(() => {
+     console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+     console.error("Error during Data Source initialization", err)
+    })
 
 app.use(express.json());
 app.use(cors());
