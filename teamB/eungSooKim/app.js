@@ -36,7 +36,7 @@ const PORT = process.env.PORT;
 
 app.get("/ping", (req, res) => {
     res.json({ message : "pong"});
-    })
+})
 
 
 app.post("/users", async (req, res, next) => {
