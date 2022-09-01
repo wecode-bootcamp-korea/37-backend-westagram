@@ -7,7 +7,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const { DataSource } =require('typeorm')
 
-const myDataSource = new DataSource({
+const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
     host: process.env.TYPEORM_HOST,
     port: process.env.TYPEORM_PORT,
@@ -20,9 +20,12 @@ app = express()
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
-myDataSource.initialize()
+database.initialize()
     .then(() => {
         console.log("Data Source has been initialized!")
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err)
     })
 
 app.use(express.json());
