@@ -51,6 +51,24 @@ app.post('/users', async (req, res, next) => {
     );
 
     res.status(201).json({ message : "userCreated" });
+})
+
+//Create post
+app.post('/posts', async (req, res, next) => {
+    const { title, description, coverImage } = req.body;
+    // console.log(req);
+
+    await database.query(
+        `INSERT INTO posts(
+            title,
+            description,
+            cover_image
+        ) VALUES (?, ?, ?);
+        `,
+        [ title, description, coverImage ]
+    );
+
+    res.status(201).json({ message : "postingCreated" });
 });
 
 // start server
