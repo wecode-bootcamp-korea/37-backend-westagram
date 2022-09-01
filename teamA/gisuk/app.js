@@ -36,9 +36,9 @@ app.get("/ping", (req,res) => {
 app.get("/user", async (req,res) => {
   await appDataSource.query(
     `SELECT 
-    users.name,
-    users.email,
-    users.profile_image
+      users.name,
+      users.email,
+      users.profile_image
     FROM users`,
     (err, rows) => {
       res.status(200).json(rows);
@@ -48,14 +48,14 @@ app.get("/user", async (req,res) => {
 app.get("/user/post/:user_id", async (req,res) => {
   const user_id = req.params.user_id;
   await appDataSource.query(
-    `select 
-    users.id as userId,
-    users.profile_image as userProfileImage,
-    posts.id as postingId,
-    posts.title as postingTitle,
-    posts.content as postingContent 
-    from posts inner join users on posts.user_id = users.id 
-    where users.id like ${user_id};`,
+    `SELECT 
+      users.id as userId,
+      users.profile_image as userProfileImage,
+      posts.id as postingId,
+      posts.title as postingTitle,
+      posts.content as postingContent 
+    FROM posts INNER JOIN users on posts.user_id = users.id 
+    WHERE users.id LIKE ${user_id};`,
     (err, rows) => {
       const posting = [];
       rows.map((el) => {
@@ -77,13 +77,13 @@ app.get("/user/post/:user_id", async (req,res) => {
 
 app.get("/post", async (req,res) => {
     await appDataSource.query(
-    `select
-    users.id as userId,
-    users.profile_image as userProfileImage,
-    posts.id as postingId,
-    posts.title as postingTitle,
-    posts.content as postingContent
-    from posts inner join users on posts.user_id = users.id;`,
+    `SELECT
+      users.id as userId,
+      users.profile_image as userProfileImage,
+      posts.id as postingId,
+      posts.title as postingTitle,
+      posts.content as postingContent
+    FROM posts INNER JOIN users on posts.user_id = users.id;`,
     (err, rows) => {
       res.status(200).json({data :rows});
   })
@@ -93,10 +93,10 @@ app.post("/user", async (req, res, next) => {
   const { name, email, profile_image, password} = req.body;
   await appDataSource.query(
     `INSERT INTO users(
-    name,
-    email,
-    profile_image,
-    password
+      name,
+      email,
+      profile_image,
+      password
     ) VALUES (?, ?, ?, ?);`,
     [ name, email, profile_image, password ]
     );
@@ -107,9 +107,9 @@ app.post("/post", async (req, res, next) => {
   const { title, content, user_id} = req.body;
   await appDataSource.query(
     `INSERT INTO posts(
-    title,
-    content,
-    user_id
+      title,
+      content,
+      user_id
     ) VALUES (?, ?, ?);`,
     [ title, content, user_id ]
   );
@@ -121,8 +121,8 @@ app.post("/likes/:user_id", async (req, res, next) => {
   const {post_id} = req.body;
   await appDataSource.query(
     `INSERT INTO likes(
-      user_id,
-      post_id
+        user_id,
+        post_id
       ) VALUES (${user_id}, ?);`,
       [ post_id ]
   );
@@ -134,20 +134,20 @@ app.patch("/post/:post_id", async (req, res, next) => {
   const {title, content, user_id} = req.body;
   await appDataSource.query(
     `UPDATE posts SET
-    title = ?,
-    content = ?,
-    user_id = ?
+      title = ?,
+      content = ?,
+      user_id = ?
     WHERE id = ${post_id}`,
     [ title, content, user_id ]
   );
   await appDataSource.query(
     `SELECT
-    users.id as userId,
-    users.name as userName,
-    posts.id as postingId,
-    posts.title as postingTitle,
-    posts.content as postingContent
-    from posts inner join users on users.id = posts.user_id where posts.id like ${post_id};`,
+      users.id as userId,
+      users.name as userName,
+      posts.id as postingId,
+      posts.title as postingTitle,
+      posts.content as postingContent
+    FROM posts INNER JOIN users on users.id = posts.user_id where posts.id like ${post_id};`,
     (err, rows) => {
       res.status(200).json({data : rows[0]});
     })
