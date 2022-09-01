@@ -9,7 +9,8 @@ const server = http.createServer(app);
 const PORT = process.env.PORT;
 
 const { DataSource } = require('typeorm');
-const { builtinModules } = require('module');
+const { assert } = require('console');
+// const { builtinModules } = require('module');
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
     host: process.env.TYPEORM_HOST,
@@ -20,8 +21,12 @@ const database = new DataSource({
 });
 
 database.initialize()
-    .then(() => console.log("Data Source has been initialized!")
-);
+    .finally(() => console.log("Data Source has been initialized!"))
+    .catch((err) => {
+        console.error(err);
+        database.destroy();
+    });
+;
 // DB와 비동기로 연결 * promise() 공부!!
 //외부 요청 내용값, body를 parsing|bodyparser를 대체
 
@@ -51,12 +56,11 @@ app.post('/users', async (req, res, next) => {
     );
 
     res.status(201).json({ message : "userCreated" });
-})
+});
 
 //Create post
 app.post('/posts', async (req, res, next) => {
     const { title, description, coverImage } = req.body;
-    // console.log(req);
 
     await database.query(
         `INSERT INTO posts(
@@ -71,6 +75,19 @@ app.post('/posts', async (req, res, next) => {
     res.status(201).json({ message : "postingCreated" });
 });
 
+app.get('/posts', async (req, res) => {
+    await database.query(
+        `SELECT
+            p.id,
+            p.title,
+            p.description,
+            p.cover_image
+        FROM posts p
+        `,(err, rows) => {
+                res.status(200).json(rows);
+        });
+})
+
 // start server
 const start = async () => {
     try {
@@ -78,7 +95,7 @@ const start = async () => {
         server.listen(PORT, () => console.log(`====Server is listening on ${PORT}====`));
     } catch (err) {
         throw err; //상위 컨텍스트로 에러 전파
-      }
+    }
 };
 
 start();
