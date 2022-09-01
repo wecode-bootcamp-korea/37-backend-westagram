@@ -78,11 +78,11 @@ app.get('/lookup', async(req, res) => {
             res.status(200).json({"data":rows});
     })
 });
-///////////////////
+
 app.get('/userinfo/:user_id', async(req, res) => {
+  const userId = req.params.user_id;
   const result = {};
   const post_list = [];
-  const userId = req.params.user_id;
   await appDataSource.manager.query(
     `SELECT
         posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
@@ -102,7 +102,6 @@ app.get('/userinfo/:user_id', async(req, res) => {
             res.status(200).json({"data" : result});
     })
 });
-//////////////
 
   const start = async () => {
     try {
