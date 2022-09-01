@@ -102,25 +102,26 @@ app.get('/userinfo/:user_id', async(req, res) => {
             res.status(200).json({"data" : result});
     })
 });
-/////////////
+
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
   const { content } = req.body
+  const result = {};
   await appDataSource.manager.query(`
   UPDATE posts
     SET content = ?
     WHERE id = ${postId};`,
     [content]
   );
-  await appDataSource.manager.query(
-    `SELECT *
+  await appDataSource.manager.query(`
+    SELECT *
     FROM posts
-    WHERE id = ${postId};`
-    ,(err, rows) => {
-            res.status(200).json({"data":rows});
+    WHERE id = ${postId};`,
+    (err, rows) => {
+            res.status(201).json({"data":result});
     })
 });
-////////
+
 
   const start = async () => {
     try {
