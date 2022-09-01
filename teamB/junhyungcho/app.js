@@ -1,12 +1,11 @@
+require('dotenv').config()
 const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
-dotenv.config();
 
 const { DataSource } = require('typeorm');
-const myDataSource = new DataSource({
+const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
     host: process.env.TYPEORM_HOST,
     port: process.env.TYPEORM_PORT,
@@ -15,7 +14,9 @@ const myDataSource = new DataSource({
     database: process.env.TYPEORM_DATABASE
 });
 
-myDataSource.initialize().then(() => console.log("Data Source has been initialized!"));
+database.initialize()
+    .then(() => console.log("Data Source has been initialized!")
+);
 
 const app = express();
 
