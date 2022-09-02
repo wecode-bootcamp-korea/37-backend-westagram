@@ -83,15 +83,22 @@ app.get("/posts", async (req, res) => {
 });
 
 app.get("/userpost/:userID", async (req, res) => {
-  const userID = req.params.userID;
+  let userID = req.params.userID;
+  const result = {};
   await database.query(
     `SELECT users.id AS userId,
-                users.profile_image AS userProfileId,
-                posts.id AS postingId, posts.title AS postingTitle,
-                posts.content AS postingContent
-         From posts JOIN users ON users.id = ${userID} AND users.id = posts.user_id`,
+            users.profile_image AS userProfileId
+         FROM users WHERE users.id = ${userID}`,
     (err, rows) => {
-      res.status(200).json(rows);
+      result.user = rows;
+
+      database.query(
+        `SELECT posts.id AS postingID, posts.profile_image AS postingImageUrl, posts.title AS postingContent FROM posts WHERE 1 = posts.user_id`,
+        (err, postInfo) => {
+          result.posts = postInfo;
+          res.status(200).json({ data: result });
+        }
+      );
     }
   );
 });
