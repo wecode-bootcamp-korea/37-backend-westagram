@@ -40,16 +40,17 @@ app.get('/ping', (req, res) => {
 
 //create users
 app.post('/users', async (req, res, next) => {
-    const { name, email, password } = req.body
+    const { name, email, profile_image, password } = req.body
 
     await myDataSource.query(
         `INSERT INTO users(
             name,
             email,
+            profile_image,
             password
-        ) VALUES (?, ?, ?);
+        ) VALUES (?, ?, ?, ?);
         `,
-        [ name, email, password ]
+        [ name, email, profile_image, password ]
     );
 
     res.status(200).json({ message:'userCreated'})
