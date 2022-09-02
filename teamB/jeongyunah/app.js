@@ -24,17 +24,33 @@ appDataSource.initialize()
     console.log("Error during Data Source initalization", err)
   });
 
-app.use(logger('combined')); 
+app.use(logger('dev')); 
 app.use(cors()) 
 app.use(express.json()) 
 
 app.get('/ping', function (req, res) {
-  res.json({message: 'pong'})
+  res.json(200, { message: 'pong'})
 })
 
-const serverStart = async () => { 
+app.post("/signup", async(req, res, next) => {
+  const { name , email, password} = req.body
+
+ await appDataSource.query(
+  `INSERT INTO users(
+    name, email, password
+    ) VALUES (?, ?, ?);
+  `,
+  [ name , email, password ]
+ );
+
+ res.status(201).json({ message : "userCreated"});
+
+  });
+
+//const serverStart = async () => { 
   app.listen(process.env.PORT, function () {
     console.log('server listening on port 3000')
-})};
+});
+//};
 
 serverStart() 
