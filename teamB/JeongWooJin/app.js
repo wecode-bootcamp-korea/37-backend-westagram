@@ -122,6 +122,17 @@ app.patch('/modifypost/:post_id', async(req, res) => {
     })
 });
 
+app.delete('/deletepost/:post_id', async(req, res) => {
+  const postId = req.params.post_id;
+    await appDataSource.query(
+      `DELETE FROM posts
+      WHERE posts.id = ${postId}`,
+    (err, rows) => {
+      res.status(201).json({"message" : "postingDeleted"});
+    })
+});
+
+
 
   const start = async () => {
     try {
