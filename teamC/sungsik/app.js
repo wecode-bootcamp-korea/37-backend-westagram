@@ -31,8 +31,38 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("combined"));
 
+
+// connection check
 app.get('/ping', (req, res) => {
     res.status(200).json({ message:'pong' })
+})
+
+
+//create users
+app.post('/users', async (req, res, next) => {
+    const { name, email, profile_image, password } = req.body
+    
+    const user = await database.query(`
+        SELECT email 
+        FROM users 
+        WHERE users.email = ?` , [email]
+    )
+
+    if (user.length !== 0) { 
+        res.status(409).json({ message:'userOverlaped'})
+    } else {
+        await database.query(
+            `INSERT INTO users(
+                name,
+                email,
+                profile_image,
+                password
+            ) VALUES (?, ?, ?, ?);
+            `,
+            [ name, email, profile_image, password ]
+        );
+        res.status(200).json({ message:'userCreated'})
+    }
 })
 
 const server = http.createServer(app);
