@@ -127,9 +127,8 @@ app.delete('/deletepost/:post_id', async(req, res) => {
     await appDataSource.query(
       `DELETE FROM posts
       WHERE posts.id = ${postId}`,
-    (err, rows) => {
+    );
       res.status(201).json({"message" : "postingDeleted"});
-    })
 });
 
 
