@@ -136,7 +136,7 @@ app.delete('/deletepost/:post_id', async(req, res) => {
   const start = async () => {
     try {
       app.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
-    } catch (err) {
+    } catch (err) {햐
       console.error(err);
     }
   };
