@@ -35,7 +35,7 @@ app.use(morgan('dev'))
 
 
 app.get("/ping", (req, res) => {
-    res.json({message : "pong"});
+    res.status(200).json({message : "pong"});
 });
 
 const server = http.createServer(app)
