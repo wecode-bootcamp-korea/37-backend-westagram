@@ -47,10 +47,10 @@ app.post("/signup", async(req, res, next) => {
 
   });
 
-//const serverStart = async () => { 
+const serverStart = async () => { 
   app.listen(process.env.PORT, function () {
     console.log('server listening on port 3000')
 });
-//};
+};
 
 serverStart() 
