@@ -25,7 +25,7 @@ appDataSource.initialize()
       console.log("Data Source has been initialized!");
   })
   .catch((err) =>{
-     console.err("Error during Data Source initialization", err);
+     console.log("Error during Data Source initialization", err);
       appDataSource.destroy()
   });
 
@@ -49,10 +49,11 @@ app.get('/lookup', async(req, res) =>{
     )
   });
 
-  app.get('/userInfo/:user_id', async(req, res) =>{
-    const userId = req.params.user_id;
+  app.get('/userInfo/:userid', async(req, res) =>{
+    const userId = req.params.userid;
     const result = {};
     const postingList = [];
+
     await appDataSource.manager.query(`
         SELECT 
             users.id as userId, 
@@ -78,7 +79,7 @@ app.get('/lookup', async(req, res) =>{
   });
   
 app.post("/users", async(req, res, next) => {
-    const {name, email, profile_image, password} = req.body;
+    const { name, email, profile_image, password } = req.body;
     await appDataSource.query(`INSERT INTO users(
         name, 
         email, 
@@ -91,7 +92,7 @@ app.post("/users", async(req, res, next) => {
   });
 
   app.post("/posts", async(req, res, next) => {
-    const {title, content, user_id} = req.body;
+    const { title, content, user_id } = req.body;
     await appDataSource.query(`
       INSERT INTO posts(
         title, 
@@ -103,9 +104,10 @@ app.post("/users", async(req, res, next) => {
     res.status(201).json({"message" : "postCreated"});
   });
 
-  app.post("/likes/:user_id", async(req, res, next) => {
-    userId = req.params.user_id;
-    const {post_id} = req.body;
+  app.post("/likes/:userid", async(req, res, next) => {
+    userId = req.params.userid;
+    const { post_id } = req.body;
+
     await appDataSource.query(`
       INSERT INTO likes(
         user_id, 
@@ -116,9 +118,10 @@ app.post("/users", async(req, res, next) => {
     res.status(201).json({"message" : "likeCreated"});
   });
 
-  app.patch("/editPost/:post_id", async(req, res, next) => { // next의 역할은 무엇인가?
-    const postId = req.params.post_id;
-    const {title, content} = req.body;
+  app.patch("/editPost/:postid", async(req, res, next) => { // next의 역할은 무엇인가?
+    const postId = req.params.postid;
+    const { title, content } = req.body;
+
     await appDataSource.query(`
       UPDATE posts 
         SET title = ?, 
@@ -126,21 +129,22 @@ app.post("/users", async(req, res, next) => {
       WHERE id = ${postId};`,
       [title, content]
     );
-    await myDataSource.manager.query(
-     `SELECT * 
-     FROM posts
-     WHERE id = ${postId}`
+    await appDataSource.manager.query(`
+      SELECT * 
+      FROM posts
+      WHERE id = ${postId};`
      ,(err, rows) => {
-       res.status(200).json({"data" : rows});s
+       res.status(200).json({"data" : rows});
      }
    );
  });
 
- app.delete('/delPost/:post_id', async(req, res) =>{
-    const postId = req.params.post_id;
-    await myDataSource.manager.query(`
+ app.delete('/delPost/:postid', async(req, res) =>{
+    const postId = req.params.postid; 
+
+    await appDataSource.manager.query(`
       DELETE FROM posts
-      WHERE id = ${postId}`
+      WHERE id = ${postId};`
     );
     res.status(203).json({"message" : "postingDeleted"});
   });
