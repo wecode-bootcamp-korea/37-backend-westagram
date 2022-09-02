@@ -73,6 +73,7 @@ app.get("/posts", async (req, res) => {
     `SELECT posts.user_id AS userId,
                 users.profile_image AS userProfileImage,
                 posts.id AS postingId,
+                posts.title AS postingTitle,
                 posts.profile_image AS potingImageUrl,
                 posts.content As postingContent
          FROM users JOIN posts ON users.id = posts.user_id`,
@@ -85,13 +86,13 @@ app.get("/posts", async (req, res) => {
 app.get("/userpost/:userID", async (req, res) => {
   let userID = req.params.userID;
   const result = {};
+
   await database.query(
     `SELECT users.id AS userId,
             users.profile_image AS userProfileId
          FROM users WHERE users.id = ${userID}`,
     (err, rows) => {
       result.user = rows;
-
       database.query(
         `SELECT posts.id AS postingID, 
         posts.profile_image AS postingImageUrl, 
@@ -109,6 +110,7 @@ app.get("/userpost/:userID", async (req, res) => {
 app.put("/post/:postID", async (req, res) => {
   const { postingTitle, postingContent } = req.body;
   const postID = req.params.postID;
+
   await database.query(
     `UPDATE posts
          SET title = ?,
@@ -133,6 +135,7 @@ app.put("/post/:postID", async (req, res) => {
 
 app.delete("/del/:postID", async (req, res) => {
   const postID = req.params.postID;
+
   await database.query(
     `DELETE FROM posts
          WHERE posts.id = ${postID}`
