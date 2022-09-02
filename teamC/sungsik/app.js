@@ -31,8 +31,28 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("combined"));
 
+
+// connection check
 app.get('/ping', (req, res) => {
     res.status(200).json({ message:'pong' })
+})
+
+
+//create users
+app.post('/users', async (req, res, next) => {
+    const { name, email, password } = req.body
+
+    await myDataSource.query(
+        `INSERT INTO users(
+            name,
+            email,
+            password
+        ) VALUES (?, ?, ?);
+        `,
+        [ name, email, password ]
+    );
+
+    res.status(200).json({ message:'userCreated'})
 })
 
 const server = http.createServer(app);
