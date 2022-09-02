@@ -34,7 +34,7 @@ appDataSource.initialize()
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })
-
+ //assignment 2 유저회원가입
   app.post("/users", async (req, res, next) => {
     const { name, email, profile_image, password } = req.body;
 
@@ -51,7 +51,7 @@ appDataSource.initialize()
 
       res.status(201).json({ "message" : "userCreated"});
   })
-
+//assignment 3 게시글 등록하기
   app.post("/posts", async (req, res, next) => {
     const { title, content, user_id } = req.body;
 
@@ -67,7 +67,7 @@ appDataSource.initialize()
 
       res.status(201).json({ "message" : "postCreated"});
   })
-
+//assignment 4 전체 게시글 조회하기
 app.get('/lookup', async(req, res) => {
   await appDataSource.manager.query(
     `SELECT
@@ -78,7 +78,7 @@ app.get('/lookup', async(req, res) => {
             res.status(200).json({"data":rows});
     })
 });
-
+//assignment 5 유저의 게시글 조회하기
 app.get('/userinfo/:user_id', async(req, res) => {
   const userId = req.params.user_id;
   const result = {};
@@ -102,7 +102,7 @@ app.get('/userinfo/:user_id', async(req, res) => {
             res.status(200).json({"data":result});
     })
 });
-
+//assignment 6 게시글 수정하기
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
   const { content } = req.body
@@ -121,17 +121,31 @@ app.patch('/modifypost/:post_id', async(req, res) => {
       res.status(201).json({"data":result});
     })
 });
-
-app.delete('/deletepost/:post_id', async(req, res) => {
+//assignment 7 게시글 삭제하기
+app.delete('/deletepost/:post_id', async(req, res, next) => {
   const postId = req.params.post_id;
     await appDataSource.query(
       `DELETE FROM posts
       WHERE posts.id = ${postId}`,
     );
-      res.status(201).json({"message" : "postingDeleted"});
+      res.status(200).json({"message" : "postingDeleted"});
 });
 
+//assignment 8 좋아요 누르기
+app.post("/likes", async (req, res) => {
+  const { user_id, post_id } = req.body;
+  console.log(user_id, post_id)
+await appDataSource.query(
+  `INSERT INTO likes(
+    user_id,
+    post_id
+  ) VALUES (?, ?);
+  `,
+  [ user_id, post_id ]
+);
 
+    res.status(201).json({ "message" : "likeCreated"});
+})
 
   const start = async () => {
     try {
