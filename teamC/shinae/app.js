@@ -34,52 +34,24 @@ app.use(morgan('dev'))
 
 // health check
 app.get("/ping", (req, res) => {
-    res.json({message : "pong"});
+    res.status(200).json({message : "pong"});
 });
 
-//Create a book
-app.post('/books', async (req, res, next)=> {
-  const {title, description, coverImage } = req.body
-
-  //consol.log(req)
+//유저 회원가입
+app.post('/user/sign-up', async (req, res)=> {
+  const {id, name, email, password } = req.body
 
   await appDataSource.query(
     `INSERT INTO books(
-        title,
-        description,
-        cover_image
-      ) VALUES(?,?,?);`,
-      [ title, description, coverImage ]
+        id,
+        name,
+        email, 
+        password,
+      ) VALUES(?,?,?,?);
+      `,
+      [ id, name, email, password  ]
   );
-  res.status(201).json({ message : 'successfully created'});
-})
-
-//Get all books
-app.get('/books', async (req, res) => {
-  await appDataSource.manager.query(
-    `SELECT
-        b.id,
-        b.title,
-        b.description,
-        b.cover_image
-      FROM books b`
-    ,(err, rows) => {
-      res.status(200).json(rows);
-    })
-});
-
-
-//Update a single book by its pri
-
-//Delete a book
-app.delete('/books/:bookId', async(req, res) => {
-  const {bookId} = req.params;
-
-    await appDataSource.query(
-    `DELETE FROM books
-    WHERE books.id = ${bookId}
-    `);
-      res.status(204).json({ message : "successfully deleted!"});
+  res.status(201).json({ message : "userCreated"});
 })
 
 const start = async () => {
