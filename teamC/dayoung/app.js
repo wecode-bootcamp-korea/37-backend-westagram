@@ -78,17 +78,28 @@ app.get('/lookup', async(req, res) =>{
     )
   });
   
-app.post("/users", async(req, res, next) => {
-    const { name, email, profile_image, password } = req.body;
-    await appDataSource.query(`INSERT INTO users(
-        name, 
-        email, 
-        profile_image, 
-        password
-        )values(?, ?, ?, ?);`,
-      [name, email, profile_image, password]
-    );
-    res.status(201).json({"message" : "userCreated"});
+  app.post("/users", async(req, res, next) => {
+    const { name, email, profile_image, password} = req.body;
+    await appDataSource.manager.query(
+      `SELECT *
+      FROM users
+      WHERE users.email = "${email}"`
+      ,async (err, rows) => { // async 자동으로 생성되는데 왜 그러는건가요?
+        if(Object.keys(rows).length == 0){
+          await appDataSource.query(`INSERT INTO users(
+            name, 
+            email, 
+            profile_image, 
+            password
+            )values(?, ?, ?, ?);`,
+          [name, email, profile_image, password]
+        );
+        res.status(200).json({"message" : "userCreated"});
+        }
+        else 
+        res.status(200).json({"message" : "fail"});
+      }
+    )
   });
 
   app.post("/posts", async(req, res, next) => {
