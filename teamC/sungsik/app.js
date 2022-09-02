@@ -41,19 +41,41 @@ app.get('/ping', (req, res) => {
 //create users
 app.post('/users', async (req, res, next) => {
     const { name, email, profile_image, password } = req.body
-
-    await myDataSource.query(
-        `INSERT INTO users(
-            name,
-            email,
-            profile_image,
-            password
-        ) VALUES (?, ?, ?, ?);
-        `,
-        [ name, email, profile_image, password ]
-    );
-
-    res.status(200).json({ message:'userCreated'})
+    
+    const check = await database.query(
+        `SELECT email FROM users WHERE users.email = ?`
+        ,email
+    )
+    
+    if (check.length === 0) {
+        await database.query(
+            `INSERT INTO users(
+                name,
+                email,
+                profile_image,
+                password
+            ) VALUES (?, ?, ?, ?);
+            `,
+            [ name, email, profile_image, password ]
+        );
+        res.status(200).json({ message:'userCreated'})
+    } else {
+        if (check[0].email === email) {
+            res.status(409).json({ message:'userOverlaped'})
+        } else {
+            await database.query(
+                `INSERT INTO users(
+                    name,
+                    email,
+                    profile_image,
+                    password
+                ) VALUES (?, ?, ?, ?);
+                `,
+                [ name, email, profile_image, password ]
+            );
+            res.status(200).json({ message:'userCreated'})
+        }
+    }
 })
 
 const server = http.createServer(app);
