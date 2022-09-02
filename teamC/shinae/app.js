@@ -37,12 +37,12 @@ app.get("/ping", (req, res) => {
     res.status(200).json({message : "pong"});
 });
 
-//유저 회원가입
+//user sign-up
 app.post('/user/sign-up', async (req, res)=> {
   const {id, name, email, password } = req.body
 
   await appDataSource.query(
-    `INSERT INTO books(
+    `INSERT INTO users(
         id,
         name,
         email, 
