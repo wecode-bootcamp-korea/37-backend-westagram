@@ -1,7 +1,9 @@
 require('dotenv').config();
 
+// Built-in package
 const http = require ("http");
 
+// 3rd-party package
 const express = require ("express");
 const cors = require ("cors");
 const app = express();
@@ -21,6 +23,9 @@ const DataSource = new DataSource({
 myDataSource.initialize()
     .then(()=> {
       console.log("Data Sourse has been initialized!")
+    })
+    .catch((err) => {
+      console.error("Error during Data Source initialization", err)
     })
 
 
