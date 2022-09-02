@@ -99,14 +99,13 @@ app.get('/userinfo/:user_id', async(req, res) => {
               post_list.push(tmp);
             })
             result.postings = post_list;
-            res.status(200).json({"data" : result});
+            res.status(200).json({"data":result});
     })
 });
 
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
   const { content } = req.body
-  const result = {};
   await appDataSource.manager.query(`
   UPDATE posts
     SET content = ?
@@ -118,7 +117,8 @@ app.patch('/modifypost/:post_id', async(req, res) => {
     FROM posts
     WHERE id = ${postId};`,
     (err, rows) => {
-            res.status(201).json({"data":result});
+      let result = rows[0]
+      res.status(201).json({"data":result});
     })
 });
 
