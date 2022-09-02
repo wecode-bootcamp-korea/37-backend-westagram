@@ -34,14 +34,26 @@ app.get('/ping', cors(), function(req, res, next){
   res.json({message : 'pong'})
 })
 
-app.get('/lookup', async(req, res) =>{
+app.post("/users", async(req, res, next) => {
+  const { name, email, profile_image, password} = req.body;
   await appDataSource.manager.query(
-    `SELECT 
-    users.id, users.profile_image, posts.id, posts.user_id, posts.title, posts.content 
-    FROM users, posts
-    WHERE users.id = posts.user_id`
-    ,(err, rows) => {
-      res.status(200).json({"data" : rows});
+    `SELECT *
+    FROM users
+    WHERE users.email = "${email}"`
+    ,async (err, rows) => { // async 자동으로 생성되는데 왜 그러는건가요?
+      if(Object.keys(rows).length == 0){
+        await appDataSource.query(`INSERT INTO users(
+          name, 
+          email, 
+          profile_image, 
+          password
+          )values(?, ?, ?, ?);`,
+        [name, email, profile_image, password]
+      );
+      res.status(200).json({"message" : "userCreated"});
+      }
+      else 
+      res.status(200).json({"message" : "fail"});
     }
   )
 });
