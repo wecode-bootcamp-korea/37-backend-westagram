@@ -5,9 +5,12 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const { DataSource } = require("typeorm");
-const app = express();
 
-app.use(express.json());
+const app = express();
+const server = http.createServer(app);
+const PORT = process.env.PORT; 
+
+app.use(express.json()); // 바디에서 받아온 값을 json형태의 객체로 다시 받아올 수 있음!
 app.use(morgan('dev'));
 app.use(cors());
 
@@ -33,20 +36,17 @@ app.get('/ping', function(req, res, next){
   res.json({message : 'pong'})
 });
 
-
-app.get('/lookup', async(req, res) =>{
-    await appDataSource.manager.query(
+app.get('/lookup', async (req, res) =>{
+    const user = await appDataSource.manager.query(
       `SELECT 
         users.id, 
-        users.profile_image, 
+        users.profileImage, 
         posts.id, posts.user_id, 
         posts.title, posts.content 
       FROM users, posts
       WHERE users.id = posts.user_id`
-      ,(err, rows) => {
-        res.status(200).json({"data" : rows});
-      }
     )
+    res.status(200).json({data : user})
   });
 
   app.get('/userInfo/:userid', async(req, res) =>{
@@ -54,52 +54,49 @@ app.get('/lookup', async(req, res) =>{
     const result = {};
     const postingList = [];
 
-    await appDataSource.manager.query(`
+    const rows = await appDataSource.manager.query(`
         SELECT 
             users.id as userId, 
-            users.profile_image as userProfileImage, 
+            users.profileImage as userProfileImage, 
             posts.id as postingId, 
             posts.title, 
             posts.content 
         FROM users inner join posts on users.id = posts.user_id and users.id = ${userId}`
-      ,(err, rows) => {
-         result.usersId = rows[0].userId;
-         result.useProfileImage = rows[0].userProfileImage;
-         rows.map(el =>{
-          let tmp = {};
-          tmp.postingId = el.postingId;
-          tmp.content = el.content;
-          tmp.title = el.title;
-          postingList.push(tmp);
-         })
-         result.postings = postingList;
-        res.status(200).json({"data" : result});
-      }
     )
+    result.usersId = rows[0].userId;
+    result.useProfileImage = rows[0].userProfileImage;
+    rows.map(el =>{
+    let tmp = {};
+    tmp.postingId = el.postingId;
+    tmp.content = el.content;
+    tmp.title = el.title;
+    postingList.push(tmp);
+    })
+    result.postings = postingList;
+  res.status(200).json({"data" : result});
   });
   
   app.post("/users", async(req, res, next) => {
-    const { name, email, profile_image, password} = req.body;
-    await appDataSource.manager.query(
+    const { name, email, profileImage, password} = req.body;
+    const rows = await appDataSource.manager.query(
       `SELECT *
       FROM users
       WHERE users.email = "${email}"`
-      ,async (err, rows) => { // async 자동으로 생성되는데 왜 그러는건가요?
-        if(Object.keys(rows).length == 0){
-          await appDataSource.query(`INSERT INTO users(
-            name, 
-            email, 
-            profile_image, 
-            password
-            )values(?, ?, ?, ?);`,
-          [name, email, profile_image, password]
-        );
-        res.status(200).json({"message" : "userCreated"});
-        }
-        else 
-        res.status(200).json({"message" : "fail"});
-      }
     )
+    if(Object.keys(rows).length == 0){
+      await appDataSource.query(`INSERT INTO users(
+        name, 
+        email, 
+        profileImage, 
+        password
+        )values(?, ?, ?, ?);`,
+      [name, email, profileImage, password]
+    );
+    res.status(201).json({"message" : "userCreated"});
+    }
+    else 
+    res.status(202).json({"message" : "fail"});
+
   });
 
   app.post("/posts", async(req, res, next) => {
@@ -115,16 +112,15 @@ app.get('/lookup', async(req, res) =>{
     res.status(201).json({"message" : "postCreated"});
   });
 
-  app.post("/likes/:userid", async(req, res, next) => {
-    userId = req.params.userid;
-    const { post_id } = req.body;
+  app.post("/likes/:userId", async(req, res, next) => {
+    userId = req.params.userId;
+    const { postId } = req.body;
 
     await appDataSource.query(`
       INSERT INTO likes(
         user_id, 
         post_id
-        )values(${userId}, ?);`,
-      [post_id]
+        )values(${userId}, ${postId});`, 
     );
     res.status(201).json({"message" : "likeCreated"});
   });
@@ -140,14 +136,12 @@ app.get('/lookup', async(req, res) =>{
       WHERE id = ${postId};`,
       [title, content]
     );
-    await appDataSource.manager.query(`
+    const posts = await appDataSource.manager.query(`
       SELECT * 
       FROM posts
       WHERE id = ${postId};`
-     ,(err, rows) => {
-       res.status(200).json({"data" : rows});
-     }
    );
+   res.status(200).json({"data" : posts[0]});
  });
 
  app.delete('/delPost/:postid', async(req, res) =>{
@@ -160,9 +154,6 @@ app.get('/lookup', async(req, res) =>{
     res.status(203).json({"message" : "postingDeleted"});
   });
   
-
-const server = http.createServer(app);
-const PORT = process.env.PORT;
 
 const start = async () => {
   server.listen(PORT, () => console.log(`erviser is listening on  ${PORT}`))
