@@ -28,14 +28,14 @@ appDataSource.initialize()
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
-    
+
 app.get("/ping", (req,res) => {
   res.status(200).json({"message" : "pong"});
 });
 
 app.get("/user", async (req,res) => {
   await appDataSource.query(
-    `SELECT 
+    `SELECT
       users.name,
       users.email,
       users.profile_image
@@ -47,6 +47,7 @@ app.get("/user", async (req,res) => {
 
 app.get("/user/post/:userId", async (req,res) => {
   const userId = req.params.userId;
+  
   const user = await appDataSource.query(
     `SELECT
       users.id as userId,
@@ -63,7 +64,7 @@ app.get("/user/post/:userId", async (req,res) => {
     WHERE posts.user_id = ${userId};`,
   )
   user[0].posting = post;
-  result = user[0];
+  const result = user[0];
   res.status(200).json({data:result})
 })
 
@@ -157,6 +158,6 @@ const start = async () => {
   } catch (err) {
     console.error(err);
   }
-} 
+}
 
 start();
