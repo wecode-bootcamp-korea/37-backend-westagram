@@ -9,5 +9,5 @@ CREATE TABLE users (
     profile_image VARCHAR(1000) NULL DEFAULT "https://github.com/amacneil/dbmate#command-line-options"
 );
 
--- migrate:down
+-- migrate:down 
 DROP TABLE users;
