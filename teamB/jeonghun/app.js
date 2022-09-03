@@ -120,5 +120,3 @@ const start = async () => {
 }
 
 start()
-
-//asdasd
