@@ -102,7 +102,7 @@ app.get("/userposts/:userId", async (req, res) => {
         WHERE ${userId} = posts.user_id`,
         (err, postInfo) => {
           result.postings = postInfo
-          res.status(200).json(result);
+          res.status(200).json({data:result});
         }
       );
     }
