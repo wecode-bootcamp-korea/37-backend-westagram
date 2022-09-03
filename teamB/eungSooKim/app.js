@@ -38,7 +38,7 @@ app.get("/ping", (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, passWord } = req.body;
 
   await database.query(
     `INSERT INTO users(
@@ -47,21 +47,21 @@ app.post("/users", async (req, res) => {
             password
         ) VALUES (?, ?, ?);
         `,
-    [name, email, password]
+    [name, email, passWord]
   );
   res.status(201).json({ message: "userCreated" });
 });
 
-app.post("/posts/:userID", async (req, res) => {
+app.post("/posts/:userId", async (req, res) => {
   const { title, content } = req.body;
-  const userID = req.params.userID;
+  const userId = req.params.userId;
 
   await database.query(
     `INSERT INTO posts(
             title,
             content,
             user_id
-        ) VALUES (?, ?, ${userID});
+        ) VALUES (?, ?, ${userId});
         `,
     [title, content]
   );
@@ -83,39 +83,40 @@ app.get("/posts", async (req, res) => {
   );
 });
 
-app.get("/userpost/:userID", async (req, res) => {
-  let userID = req.params.userID;
+
+app.get("/userpost/:userId", async (req, res) => {
+  let userId = req.params.userId;
   const result = {};
 
   await database.query(
     `SELECT users.id AS userId,
             users.profile_image AS userProfileId
-         FROM users WHERE users.id = ${userID}`,
+         FROM users WHERE users.id = ${userId}`,
     (err, rows) => {
       result.user = rows;
       database.query(
         `SELECT posts.id AS postingID, 
         posts.profile_image AS postingImageUrl, 
         posts.title AS postingContent FROM posts 
-        WHERE ${userID} = posts.user_id`,
+        WHERE ${userId} = posts.user_id`,
         (err, postInfo) => {
           result.posts = postInfo;
-          res.status(200).json({ data: result });
+          res.status(200).json({data:result});
         }
       );
     }
   );
 });
 
-app.put("/post/:postID", async (req, res) => {
+app.put("/post/:postId", async (req, res) => {
   const { postingTitle, postingContent } = req.body;
-  const postID = req.params.postID;
+  const postId = req.params.postId;
 
   await database.query(
     `UPDATE posts
          SET title = ?,
              content = ?
-         WHERE posts.id= ${postID}
+         WHERE posts.id= ${postId}
         `,
     [postingTitle, postingContent]
   );
@@ -126,34 +127,34 @@ app.put("/post/:postID", async (req, res) => {
                 posts.id AS postingId,
                 posts.title AS postingTitle,
                 posts.content AS postingContent
-         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ${postID}`,
+         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ${postId}`,
     (err, rows) => {
       res.status(200).json(rows);
     }
   );
 });
 
-app.delete("/del/:postID", async (req, res) => {
-  const postID = req.params.postID;
+app.delete("/del/:postId", async (req, res) => {
+  const postId = req.params.postId;
 
   await database.query(
     `DELETE FROM posts
-         WHERE posts.id = ${postID}`
+         WHERE posts.id = ${postId}`
   );
   res.status(200).json({ message: "postingDeleted" });
 });
 
-app.post("/like/:userID", async (req, res) => {
-  const { postID } = req.body;
-  const userID = req.params.userID;
+app.post("/like/:userId", async (req, res) => {
+  const { postId } = req.body;
+  const userId = req.params.userId;
 
   await database.query(
     `INSERT INTO likes(
             post_id,
             user_id
-        ) VALUES (?, ${userID});
+        ) VALUES (?, ${userId});
         `,
-    [postID]
+    [postId]
   );
   res.status(201).json({ message: "likeCreated" });
 });
