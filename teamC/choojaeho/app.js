@@ -72,7 +72,7 @@ app.post("/postsman", async (req, res, next) => {
 //과제 4번
 app.get("/postman", async (req, res ) => {
 
-    await database.query(
+    const user = await database.query(
         `
             SElECT 
             posts.user_id as userId, 
@@ -83,7 +83,7 @@ app.get("/postman", async (req, res ) => {
             from users join posts on users.id=posts.user_id
         `
     )
-    res.status(201).json({message : "user created"})
+    res.status(201).json({data : user})
 });
 
     
@@ -94,7 +94,7 @@ const server = http.createServer(app);
 
 
 const start = async() => {
-    try{ app.listen(PORT,()=>console.log(`server is listening on ${`PORT`}`));
+    try{ app.listen(PORT,()=>console.log(`server is listening on ${PORT}`));
     } catch(err) {
         console.log (arr);
     }
