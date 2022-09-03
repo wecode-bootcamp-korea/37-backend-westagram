@@ -30,7 +30,7 @@ appDataSource.initialize()
   app.use(morgan('dev'));
   app.use(express.json());
 
-  //health check
+  
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })
@@ -125,22 +125,42 @@ app.get('/userinfo/:user_id', async(req, res) => {
 //assignment 6 게시글 수정하기
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
-  const { content } = req.body
+  const {content}  = req.body
   await appDataSource.manager.query(`
   UPDATE posts
     SET content = ?
     WHERE id = ${postId};`,
     [content]
   );
-  await appDataSource.manager.query(`
+  const result = await appDataSource.manager.query(`
     SELECT *
     FROM posts
-    WHERE id = ${postId};`,
-    (err, rows) => {
-      let result = rows[0]
-      res.status(201).json({"data":result});
-    })
-});
+    WHERE id = ${postId};`)
+    res.status(201).json({"data":result[0]});
+  
+})
+
+//assignment 6 게시글 수정하기 콜백함수
+// app.patch('/modifypost/:post_id', async(req, res) => {
+//   const postId = req.params.post_id;
+//   const {content}  = req.body
+//   await appDataSource.manager.query(`
+//   UPDATE posts
+//     SET content = ?
+//     WHERE id = ${postId};`,
+//     [content]
+//   );
+//   await appDataSource.manager.query(`
+//     SELECT *
+//     FROM posts
+//     WHERE id = ${postId};`,
+//     (err, rows) => {
+//       let result = rows[0]
+//     res.status(201).json({"data":result});
+//     })
+//  })
+
+
 //assignment 7 게시글 삭제하기
 app.delete('/deletepost/:post_id', async(req, res, next) => {
   const postId = req.params.post_id;
