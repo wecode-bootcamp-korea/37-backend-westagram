@@ -6,6 +6,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { DataSource } = require("typeorm");
 const app = express();
+const server = http.createServer(app);
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(morgan('dev'));
@@ -21,20 +23,39 @@ const appDataSource = new DataSource({
 }) 
 
 appDataSource.initialize()
-  .then(() => {
+    .then(() => {
       console.log("Data Source has been initialized!");
-  })
-  .catch((err) =>{
-     console.err("Error during Data Source initialization", err);
-      appDataSource.destroy()
-  });
+    })
+    .catch((err) => {
+      console.error("Error during Data Source initialization", err)
+    });
 
-app.get('/ping', function(req, res, next){
+app.get('/ping', cors(), function(req, res, next){
   res.json({message : 'pong'})
 })
 
-const server = http.createServer(app);
-const PORT = process.env.PORT;
+app.post("/users", async(req, res, next) => {
+  const { name, email, profileImage, password} = req.body;
+  const rows = await appDataSource.manager.query(
+    `SELECT *
+    FROM users
+    WHERE users.email = "${email}"`
+  )
+  if(Object.keys(rows).length == 0){
+    await appDataSource.query(`INSERT INTO users(
+      name, 
+      email, 
+      profile_image, 
+      password
+      )values(?, ?, ?, ?);`,
+    [name, email, profileImage, password]
+  );
+  res.status(201).json({"message" : "userCreated"});
+  }
+  else 
+  res.status(202).json({"message" : "fail"});
+
+});
 
 const start = async () => {
   server.listen(PORT, () => console.log(`erviser is listening on  ${PORT}`))
