@@ -11,5 +11,3 @@ CREATE TABLE users (
 -- migrate:down
 DROP TABLE users;
 
-
-ALTER TALBE users 
