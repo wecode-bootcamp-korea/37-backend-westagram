@@ -1,7 +1,9 @@
 require('dotenv').config();
 
+// Built-in package
 const http = require ("http");
 
+// 3rd-party package
 const express = require ("express");
 const cors = require ("cors");
 const app = express();
@@ -23,10 +25,8 @@ appDataSource.initialize()
     })
     .catch((err) => {
       console.error("Error during Data Source initialization", err)
-  })
-  
-const server = http.createServer(app)
-const PORT = process.env.PORT;
+    })
+
 
 app.use(express.json());
 app.use(cors());
