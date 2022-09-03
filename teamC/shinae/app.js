@@ -32,6 +32,9 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'))
 
+const server = http.createServer(app)
+const PORT = process.env.PORT;
+
 // health check
 app.get("/ping", (req, res) => {
     res.status(200).json({message : "pong"});
@@ -39,24 +42,23 @@ app.get("/ping", (req, res) => {
 
 //user sign-up
 app.post('/user/sign-up', async (req, res)=> {
-  const {id, name, email, profile_imge, password } = req.body
+  const { name, email, profile_image, password } = req.body
 
   await appDataSource.query(
     `INSERT INTO users(
-        id,
         name,
         email, 
-        profile_imge,
-        password,
+        profile_image,
+        password
       ) VALUES(?,?,?,?);
       `,
-      [ id, name, email, profile_imge, password ]
+      [ name, email, profile_image, password ]
   );
   res.status(201).json({ message : "userCreated"});
 })
 
 const start = async () => {
-  server.listen(3000, () => console.log(`server is listening on ${PORT}`))
+  server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
 }
 
 start();
