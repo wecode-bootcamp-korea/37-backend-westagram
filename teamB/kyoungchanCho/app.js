@@ -59,7 +59,7 @@ app.post("/users", async (req, res, next) => {
 
 //게시글 유저아이디 별 등록
 app.post("/posts", async (req, res, next) => {
-    const { title, content, user_id } = req.body
+    const { title, content, userId } = req.body
 
     await database.query(
         `INSERT INTO posts(
@@ -68,7 +68,7 @@ app.post("/posts", async (req, res, next) => {
             user_id
         ) VALUES (?, ?, ?);
         `,
-        [ title, content, user_id ]
+        [ title, content, userId ]
     );
     res.status(201).json({ message : "postCreated"})
 })
@@ -192,4 +192,3 @@ const start = async () => {
 }
 
 start()
-//    const userId = req.params.user_id;
