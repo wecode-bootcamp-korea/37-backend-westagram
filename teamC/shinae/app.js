@@ -56,7 +56,7 @@ app.post('/user/sign-up', async (req, res)=> {
 })
 
 const start = async () => {
-  server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
+  server.listen(3000, () => console.log(`server is listening on ${PORT}`))
 }
 
 start();
