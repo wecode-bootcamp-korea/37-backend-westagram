@@ -30,7 +30,6 @@ appDataSource.initialize()
   app.use(morgan('dev'));
   app.use(express.json());
 
-  //health check
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })

@@ -12,3 +12,4 @@ CREATE TABLE posts (
 
 -- migrate:down
 
+	drop table posts
