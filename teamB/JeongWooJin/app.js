@@ -102,6 +102,9 @@ app.get('/userinfo/:user_id', async(req, res) => {
             res.status(200).json({"data":result});
     })
 });
+
+
+
 //assignment 6 게시글 수정하기
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
