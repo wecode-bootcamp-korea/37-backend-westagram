@@ -37,7 +37,7 @@ app.get("/ping", (req, res) => {
 })
 
 app.post("/users", async (req, res, next) => {
-    const { name, email, profile_image, password } = req.body
+    const { name, email, profileImage, password } = req.body
 
     await database.query(
         `INSERT INTO users(
@@ -47,7 +47,7 @@ app.post("/users", async (req, res, next) => {
             password
         ) VALUES (?, ?, ?, ?);
         `,
-        [ name, email, profile_image, password ]
+        [ name, email, profileImage, password ]
     );
     res.status(201).json({ message : "userCreated" })
 })
