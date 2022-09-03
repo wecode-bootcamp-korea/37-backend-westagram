@@ -10,4 +10,4 @@ CREATE TABLE likes
   FOREIGN KEY (post_id) REFERENCES posts (id)
 );
 -- migrate:down
-
+DROP TABLE likes;
