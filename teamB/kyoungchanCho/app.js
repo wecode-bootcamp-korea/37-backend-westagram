@@ -12,7 +12,7 @@ const { ppid } = require('process');
 
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
-    host: process.env.TYPEORM_HOST,
+    host: process.env.TYPEORM_HOST,s
     port: process.env.TYPEORM_PORT,
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
@@ -185,7 +185,6 @@ app.post('/posts/likesdata', async (req, res) => {
     );
         res.status(201).json({ message : "likeCreated"})    
 })
-
 
 const start = async () => {
     server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
