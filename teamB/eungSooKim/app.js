@@ -93,15 +93,16 @@ app.get("/userposts/:userId", async (req, res) => {
             users.profile_image AS userProfileId
          FROM users WHERE users.id = ${userId}`,
     (err, rows) => {
-      result.user = rows;
+      result.userId = rows[0].userId
+      result.userProfileId = rows[0].userProfileId;
       database.query(
         `SELECT posts.id AS postingID, 
         posts.profile_image AS postingImageUrl, 
         posts.title AS postingContent FROM posts 
         WHERE ${userId} = posts.user_id`,
         (err, postInfo) => {
-          result.posts = postInfo;
-          res.status(200).json({data:result});
+          result.postings = postInfo
+          res.status(200).json(result);
         }
       );
     }
