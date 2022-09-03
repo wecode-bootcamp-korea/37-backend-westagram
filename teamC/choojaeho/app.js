@@ -40,7 +40,7 @@ app.get("/ping", (req,res) => {
 
 
 app.post("/users", async (req, res, next) => {
-    const { name, password, email, profile_image} = req.body;
+    const {name, password, email, profile_image} = req.body;
 
     await database.query(
         `INSERT INTO users (
@@ -55,6 +55,20 @@ app.post("/users", async (req, res, next) => {
     res.status(201).json({message : "user created"})
 });
 
+app.post("/postsman", async (req, res, next) => {
+    const {title, content, user_id} = req.body;
+
+    await database.query(
+        `INSERT INTO posts (
+            title,
+            content,
+            user_id
+        ) VALUES (?, ?, ?);
+        `,  
+        [title, content, user_id]
+    )
+    res.status(201).json({message : "postCreated"})
+});
     
 
 
