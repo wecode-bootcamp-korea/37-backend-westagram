@@ -38,7 +38,7 @@ app.get("/ping", (req,res) => {
     res.status(201).json({message : "PONG"});
 });
 
-
+//과제 2번
 app.post("/users", async (req, res, next) => {
     const {name, password, email, profile_image} = req.body;
 
@@ -54,7 +54,7 @@ app.post("/users", async (req, res, next) => {
     )
     res.status(201).json({message : "user created"})
 });
-
+//과제3번
 app.post("/postsman", async (req, res, next) => {
     const {title, content, user_id} = req.body;
 
@@ -69,6 +69,23 @@ app.post("/postsman", async (req, res, next) => {
     )
     res.status(201).json({message : "postCreated"})
 });
+//과제 4번
+app.get("/postman", async (req, res ) => {
+
+    await database.query(
+        `
+            SElECT 
+            posts.user_id as userId, 
+            users.profile_image as userProgileImage, 
+            posts.id as postingId, 
+            posts.posts_image as postingImageUrl, 
+            posts.content as postingContent
+            from users join posts on users.id=posts.user_id
+        `
+    )
+    res.status(201).json({message : "user created"})
+});
+
     
 
 
