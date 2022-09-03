@@ -78,32 +78,49 @@ app.get('/lookup', async(req, res) => {
             res.status(200).json({"data":rows});
     })
 });
-//assignment 5 유저의 게시글 조회하기
+//assignment 5 유저의 게시글 조회하기_콜백함수
+// app.get('/userinfo/:user_id', async(req, res) => {
+//   const userId = req.params.user_id;
+//   const result = {};
+//   const post_list = []; 
+//   await appDataSource.manager.query(
+//     `SELECT
+//         posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
+//         FROM posts, users
+//         WHERE posts.user_id = users.id and posts.user_id = ${userId};`
+//     ,(err, rows) => {
+//             result["userId"] = rows[0].user_id;
+//             result["userProfileImage"] = rows[0].profile_image;
+//             rows.map (el => {
+//               let tmp = {};
+//               tmp.postId = el.post_id;
+//               tmp.title = el.title;
+//               tmp.content = el.content;
+//               post_list.push(tmp);
+//             })
+//             result.postings = post_list;
+//             res.status(200).json({"data":result});
+//     })
+// });
+//assignment 5 유저의 게시글 조회하기_쿼리문2개
 app.get('/userinfo/:user_id', async(req, res) => {
   const userId = req.params.user_id;
-  const result = {};
-  const post_list = []; 
-  await appDataSource.manager.query(
+  const user = await appDataSource.manager.query(
     `SELECT
-        posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
-        FROM posts, users
-        WHERE posts.user_id = users.id and posts.user_id = ${userId};`
-    ,(err, rows) => {
-            result["userId"] = rows[0].user_id;
-            result["userProfileImage"] = rows[0].profile_image;
-            rows.map (el => {
-              let tmp = {};
-              tmp.postId = el.post_id;
-              tmp.title = el.title;
-              tmp.content = el.content;
-              post_list.push(tmp);
-            })
-            result.postings = post_list;
-            res.status(200).json({"data":result});
-    })
-});
+        users.id as userId,
+        users.profile_image as userProfileImage
+        FROM users 
+        WHERE users.id = ${userId};`)
+  const post = await appDataSource.manager.query(
+    `SELECT
+        posts.id as poststingId,
+        posts.content as postingContent
+        FROM posts 
+        WHERE user_id = ${userId}`)
 
-
+      user[0].postsings = post;
+      res.status(200).json({"data":user[0]});
+  });
 
 //assignment 6 게시글 수정하기
 app.patch('/modifypost/:post_id', async(req, res) => {
