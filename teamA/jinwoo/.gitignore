@@ -1,4 +1,5 @@
 .env
 node_modules/
-db/schema.sql
+db/schema copy.sql
 .vscode
+.DS_Store
