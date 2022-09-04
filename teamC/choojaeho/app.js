@@ -83,15 +83,101 @@ app.get("/postman", async (req, res ) => {
             from users join posts on users.id=posts.user_id
         `
     )
+
     res.status(201).json({data : user})
 });
 
+//과제 5번
+app.get("/posts/:userId", async (req, res, next) => {
+    const userId = req.params.userId;
     
+     await database.query(
+        `
+            SELECT
+                users.id as userId,
+                users.name as userName
+                from users where users.id =${userId}
+        `,
+            (err, data) => {
+                    database.query(
+                    `
+                        SELECT
+                        posts.id as PostingId, 
+                        posts.title as PostingName, 
+                        posts.content as PostingContent
+                        FROM posts
+                        where posts.user_id = ${userId}
+                    `,(err, posting) => {
+                        data[0]["postings"] = posting
+                        res.status(200).json({"data":data[0]})
+                    }
+        )}
+    )
+});
+
+//6번
+app.patch("/updates/:nextPosts", async (req, res, next) => {
+    const userId = req.params.nextPosts;
+    const {modified} = req.body
+    
+    await database.query(
+        `UPDATE posts
+         SET content = ?
+         WHERE user_id = ${userId}
+        `,
+        //? 자리에 업데이트값이 들어간다!!!!!!!!!!!!!!!
+        [modified] );
+    await database.query(
+        `SELECT
+        users.id as userId,
+        users.name as userName,
+        posts.id as PostingId, 
+        posts.title as PostingName, 
+        posts.content as PostingContent
+        FROM users,posts
+        WHERE posts.user_id=${userId} 
+        `,
+        (err, data) => {
+            console.log(data);
+            res.status(201).json({"data":data[0]})
+        }
+    )
+});
+
 
 
 const PORT = process.env.PORT;
 const server = http.createServer(app);
 
+
+
+//7번
+app.delete("/delete/:postId", async (req, res, next) => {
+    const postId = req.params.postId;
+    
+    await database.query(
+        `DELETE FROM posts
+         WHERE posts.id = ${postId}
+        `,
+            res.status(201).json({meassage: "postingDeleted"})
+    )
+});
+
+//8 번
+app.post("/post/likes", async (req, res, next) =>{
+    const {userid, postid} = req.body;
+
+    await database.query(
+        `
+            INSERT INTO likes (
+                user_id,
+                post_id   
+            ) VALUES (?, ?);
+        `, 
+        [userid, postid]
+    );
+    res.status(201).json({ meassage : "likeCreated"})
+});
 
 const start = async() => {
     try{ app.listen(PORT,()=>console.log(`server is listening on ${PORT}`));
@@ -99,5 +185,3 @@ const start = async() => {
         console.log (arr);
     }
 }   
-
-start()
