@@ -39,7 +39,7 @@ app.get("/ping", (req, res) => {
 });
 
 
-app.post("/users", async (req, res) => {
+app.post("/users/signup", async (req, res) => {
   const { name, email, passWord } = req.body;
 
   await database.query(
@@ -54,7 +54,7 @@ app.post("/users", async (req, res) => {
   res.status(201).json({ message: "userCreated" });
 });
 
-app.post("/posts/:userId", async (req, res) => {
+app.post("/posts/write/:userId", async (req, res) => {
   const { title, content } = req.body;
   const userId = req.params.userId;
 
@@ -70,7 +70,7 @@ app.post("/posts/:userId", async (req, res) => {
   res.status(201).json({ message: "postCreated" });
 });
 
-app.get("/posts", async (req, res) => {
+app.get("/posts/all", async (req, res) => {
   await database.query(
     `SELECT posts.user_id AS userId,
                 users.profile_image AS userProfileImage,
@@ -86,7 +86,7 @@ app.get("/posts", async (req, res) => {
 });
 
 
-app.get("/users/userPosting/:userId", async (req, res) => {
+app.get("/users/posts/:userId", async (req, res) => {
   let userId = req.params.userId;
   const result = {};
 
@@ -147,7 +147,7 @@ app.delete("/posts/delete/:postId", async (req, res) => {
   res.status(200).json({ message: "postingDeleted" });
 });
 
-app.post("/likes/:userId", async (req, res) => {
+app.post("/likes/click/:userId", async (req, res) => {
   const { postId } = req.body;
   const userId = req.params.userId;
 
