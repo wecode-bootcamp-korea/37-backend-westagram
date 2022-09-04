@@ -34,6 +34,7 @@ appDataSource.initialize()
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })
+
  //assignment 2 유저회원가입
   app.post("/users", async (req, res, next) => {
     const { name, email, profile_image, password } = req.body;
@@ -51,6 +52,7 @@ appDataSource.initialize()
 
       res.status(201).json({ "message" : "userCreated"});
   })
+
 //assignment 3 게시글 등록하기
   app.post("/posts", async (req, res, next) => {
     const { title, content, user_id } = req.body;
@@ -67,6 +69,7 @@ appDataSource.initialize()
 
       res.status(201).json({ "message" : "postCreated"});
   })
+
 //assignment 4 전체 게시글 조회하기
 app.get('/lookup', async(req, res) => {
   await appDataSource.manager.query(
@@ -78,6 +81,7 @@ app.get('/lookup', async(req, res) => {
             res.status(200).json({"data":rows});
     })
 });
+
 //assignment 5 유저의 게시글 조회하기_콜백함수
 // app.get('/userinfo/:user_id', async(req, res) => {
 //   const userId = req.params.user_id;
@@ -102,6 +106,7 @@ app.get('/lookup', async(req, res) => {
 //             res.status(200).json({"data":result});
 //     })
 // });
+
 //assignment 5 유저의 게시글 조회하기_쿼리문2개
 app.get('/userinfo/:user_id', async(req, res) => {
   const userId = req.params.user_id;
@@ -159,7 +164,6 @@ app.patch('/modifypost/:post_id', async(req, res) => {
 //     res.status(201).json({"data":result});
 //     })
 //  })
-
 
 //assignment 7 게시글 삭제하기
 app.delete('/deletepost/:post_id', async(req, res, next) => {
