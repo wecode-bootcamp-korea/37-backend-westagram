@@ -109,7 +109,7 @@ app.get("/userposts/:userId", async (req, res) => {
   );
 });
 
-app.put("/posts/:postId", async (req, res) => {
+app.put("/posts/:postId", async(req, res) => {
   const { postingTitle, postingContent } = req.body;
   const postId = req.params.postId;
 
