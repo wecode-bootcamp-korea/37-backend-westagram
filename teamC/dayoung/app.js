@@ -8,7 +8,11 @@ const { DataSource } = require("typeorm");
 
 const app = express();
 const server = http.createServer(app);
+<<<<<<< HEAD
 const PORT = process.env.PORT; 
+=======
+const PORT = process.env.PORT;
+>>>>>>> main
 
 app.use(express.json()); // 바디에서 받아온 값을 json형태의 객체로 다시 받아올 수 있음!
 app.use(morgan('dev'));
@@ -24,7 +28,7 @@ const appDataSource = new DataSource({
 }) 
 
 appDataSource.initialize()
-  .then(() => {
+    .then(() => {
       console.log("Data Source has been initialized!");
   })
   .catch((err) =>{
@@ -32,7 +36,8 @@ appDataSource.initialize()
       appDataSource.destroy()
   });
 
-app.get('/ping', function(req, res, next){
+
+app.get('/ping', cors(), function(req, res, next){
   res.json({message : 'pong'})
 });
 
