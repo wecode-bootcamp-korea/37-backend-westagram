@@ -32,6 +32,21 @@ app.get('/ping', (req, res, next) => {
   res.status(200).json({ message: 'pong' });
 });
 
+app.post('/users', async (req, res, next) => {
+  const { name, email, profile_image, password } = req.body;
+  appDataSource.manager.query(
+    `INSERT INTO users(
+        name,
+        email,
+        profile_image,
+        password
+    )VALUES(? ,? ,? ,?);
+    `,
+    [name, email, profile_image, password]
+  );
+  res.status(201).json({ message: 'userCreated' });
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`Server listening on PORT ${process.env.PORT}`);
 });
