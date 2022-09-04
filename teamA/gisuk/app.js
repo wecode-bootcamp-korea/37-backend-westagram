@@ -40,7 +40,7 @@ app.get("/user", async (req,res) => {
       users.email,
       users.profile_image
     FROM users`,
-    )
+    );
     res.status(200).json({data : user});
 });
 
@@ -53,7 +53,7 @@ app.get("/user/post/:userId", async (req,res) => {
       users.profile_image as userProfileImage
     FROM users
     WHERE users.id = ${userId};`,
-  )
+  );
   const post = await appDataSource.query(
     `SELECT
       posts.id as postingId,
@@ -61,7 +61,7 @@ app.get("/user/post/:userId", async (req,res) => {
       posts.content as postingContent
     FROM posts
     WHERE posts.user_id = ${userId};`,
-  )
+  );
   user[0].posting = post;
   const result = user[0];
   res.status(200).json({data:result})
@@ -76,7 +76,7 @@ app.get("/post", async (req,res) => {
       posts.title as postingTitle,
       posts.content as postingContent
     FROM posts INNER JOIN users on posts.user_id = users.id;`,
-    )
+    );
     res.status(200).json({data : post});
 })
 
@@ -137,7 +137,7 @@ app.patch("/post/:postId", async (req, res, next) => {
       posts.title as postingTitle,
       posts.content as postingContent
     FROM posts INNER JOIN users on users.id = posts.user_id where posts.id like ${postId};`,
-    )
+    );
     res.status(200).json({data : post[0]});
 })
 
