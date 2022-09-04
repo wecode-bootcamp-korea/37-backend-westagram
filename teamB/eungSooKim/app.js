@@ -3,6 +3,7 @@ require("dotenv").config();
 const http = require("http");
 const express = require("express");
 const cors = require("cors");
+const routes =require("./routers");
 const app = express();
 const morgan = require("morgan");
 
@@ -31,6 +32,7 @@ const morgan = require("morgan");
 app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));
+app.use(routes);
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
@@ -39,7 +41,7 @@ app.get("/ping", (req, res) => {
 });
 
 
-// app.post("/users", async (req, res) => {
+// app.post("/users/signup", async (req, res) => {
 //   const { name, email, passWord } = req.body;
 
 //   await database.query(
@@ -54,7 +56,7 @@ app.get("/ping", (req, res) => {
 //   res.status(201).json({ message: "userCreated" });
 // });
 
-// app.post("/posts/:userId", async (req, res) => {
+// app.post("/posts/write/:userId", async (req, res) => {
 //   const { title, content } = req.body;
 //   const userId = req.params.userId;
 
@@ -70,7 +72,7 @@ app.get("/ping", (req, res) => {
 //   res.status(201).json({ message: "postCreated" });
 // });
 
-// app.get("/posts", async (req, res) => {
+// app.get("/posts/all", async (req, res) => {
 //   await database.query(
 //     `SELECT posts.user_id AS userId,
 //                 users.profile_image AS userProfileImage,
@@ -86,7 +88,7 @@ app.get("/ping", (req, res) => {
 // });
 
 
-// app.get("/users/userPosting/:userId", async (req, res) => {
+// app.get("/users/posts/:userId", async (req, res) => {
 //   let userId = req.params.userId;
 //   const result = {};
 
@@ -147,7 +149,7 @@ app.get("/ping", (req, res) => {
 //   res.status(200).json({ message: "postingDeleted" });
 // });
 
-// app.post("/likes/:userId", async (req, res) => {
+// app.post("/likes/click/:userId", async (req, res) => {
 //   const { postId } = req.body;
 //   const userId = req.params.userId;
 
@@ -163,7 +165,10 @@ app.get("/ping", (req, res) => {
 // });
 
 const start = async () => {
-  server.listen(PORT, () => console.log(`server is listening on ${PORT}`));
+  try{
+  server.listen(PORT, () => console.log(`server is listening on ${PORT}`))
+}catch(err) {
+  console.error(err);
+}
 };
-
 start();
