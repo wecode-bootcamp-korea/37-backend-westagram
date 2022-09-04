@@ -86,7 +86,7 @@ app.get("/posts", async (req, res) => {
 });
 
 
-app.get("/userposts/:userId", async (req, res) => {
+app.get("/users/userPosting/:userId", async (req, res) => {
   let userId = req.params.userId;
   const result = {};
 
@@ -111,7 +111,7 @@ app.get("/userposts/:userId", async (req, res) => {
   );
 });
 
-app.put("/posts/:postId", async(req, res) => {
+app.put("/posts/modify/:postId", async(req, res) => {
   const { postingTitle, postingContent } = req.body;
   const postId = req.params.postId;
 
@@ -137,7 +137,7 @@ app.put("/posts/:postId", async(req, res) => {
   );
 });
 
-app.delete("/del/:postId", async (req, res) => {
+app.delete("/posts/delete/:postId", async (req, res) => {
   const postId = req.params.postId;
 
   await database.query(
@@ -147,7 +147,7 @@ app.delete("/del/:postId", async (req, res) => {
   res.status(200).json({ message: "postingDeleted" });
 });
 
-app.post("/like/:userId", async (req, res) => {
+app.post("/likes/:userId", async (req, res) => {
   const { postId } = req.body;
   const userId = req.params.userId;
 
