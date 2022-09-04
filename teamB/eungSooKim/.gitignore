@@ -3,7 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,visualstudio,visualstudiocode,vim,macos,zsh,linux
 
 
-schema.sql
+db/schema.sql
 
 ### Linux ###
 *~

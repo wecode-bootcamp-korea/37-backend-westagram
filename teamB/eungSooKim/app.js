@@ -1,11 +1,11 @@
 require('dotenv').config();
 
 const http = require("http");
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const morgan = require("morgan");
-
 const { DataSource } = require('typeorm');
 
 const database = new DataSource({
@@ -18,21 +18,24 @@ const database = new DataSource({
 })
 
 database.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    });
-
+ .then(() => {
+    console.log("Data Source has been initialized!")
+    })
+ .catch((err) => {
+    console.error("Error during Data Source initialization", err)
+    })
 
 app.use(express.json());
 app.use(cors());
 app.use(morgan('tiny'));
+
 const server = http.createServer(app)
 const PORT = process.env.PORT;
-
 
 app.get("/ping", (req, res) => {
     res.json({ message : "pong"});
 })
+
 
 app.post("/users", async (req, res, next) => {
     const { name, email, password } = req.body
