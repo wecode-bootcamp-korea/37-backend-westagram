@@ -5,7 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const morgan = require("morgan");
-const routes = require("./routers")
+
 // const { DataSource } = require('typeorm');
 
 
@@ -17,6 +17,7 @@ const routes = require("./routers")
 //   password: process.env.TYPEORM_PASSWORD,
 //   database: process.env.TYPEORM_DATABASE,
 // });
+
 
 // database
 //   .initialize()
@@ -30,7 +31,6 @@ const routes = require("./routers")
 app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));
-app.use(routes);
 const server = http.createServer(app);
 const PORT = process.env.PORT;
 
@@ -86,7 +86,7 @@ app.get("/ping", (req, res) => {
 // });
 
 
-// app.get("/userposts/:userId", async (req, res) => {
+// app.get("/users/userPosting/:userId", async (req, res) => {
 //   let userId = req.params.userId;
 //   const result = {};
 
@@ -111,7 +111,7 @@ app.get("/ping", (req, res) => {
 //   );
 // });
 
-// app.put("/posts/:postId", async(req, res) => {
+// app.put("/posts/modify/:postId", async(req, res) => {
 //   const { postingTitle, postingContent } = req.body;
 //   const postId = req.params.postId;
 
@@ -137,7 +137,7 @@ app.get("/ping", (req, res) => {
 //   );
 // });
 
-// app.delete("/del/:postId", async (req, res) => {
+// app.delete("/posts/delete/:postId", async (req, res) => {
 //   const postId = req.params.postId;
 
 //   await database.query(
@@ -147,7 +147,7 @@ app.get("/ping", (req, res) => {
 //   res.status(200).json({ message: "postingDeleted" });
 // });
 
-// app.post("/like/:userId", async (req, res) => {
+// app.post("/likes/:userId", async (req, res) => {
 //   const { postId } = req.body;
 //   const userId = req.params.userId;
 
