@@ -6,7 +6,8 @@ const cors = require("cors");
 const app = express();
 const morgan = require("morgan");
 
-const { DataSource } = require("typeorm");
+const { DataSource } = require('typeorm');
+
 
 const database = new DataSource({
   type: process.env.TYPEORM_CONNECTION,
@@ -17,9 +18,9 @@ const database = new DataSource({
   database: process.env.TYPEORM_DATABASE,
 });
 
+
 database
   .initialize()
-
   .then(() => {
     console.log("Data Source has been initialized!");
   })
@@ -36,6 +37,7 @@ const PORT = process.env.PORT;
 app.get("/ping", (req, res) => {
   res.json({ message: "pong" });
 });
+
 
 app.post("/users", async (req, res) => {
   const { name, email, passWord } = req.body;
