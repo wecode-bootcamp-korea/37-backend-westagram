@@ -8,10 +8,6 @@ created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
 FOREIGN KEY (user_id) REFERENCES users (id),
 FOREIGN KEY (post_id) REFERENCES users (id)
-);created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
-FOREIGN KEY (user_id) REFERENCES users (id),
-FOREIGN KEY (post_id) REFERENCES users (id)
-);
+)
 -- migrate:down
 
