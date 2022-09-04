@@ -6,7 +6,6 @@ const logger = require('morgan');
 const app = express(); 
 const { DataSource } = require('typeorm')
 
-
 const appDataSource = new DataSource({   
   type: process.env.TYPEORM_CONNECTION,
   host: process.env.TYPEORM_HOST,
@@ -27,6 +26,7 @@ appDataSource.initialize()
 app.use(logger('dev')); 
 app.use(cors()) 
 app.use(express.json()) 
+const PORT = process.env.PORT
 
 app.get('/ping', function (req, res) {
   res.json(200, { message: 'pong'})
@@ -34,12 +34,10 @@ app.get('/ping', function (req, res) {
 
 app.post("/signup", async(req, res, next) => {
   const { name , email, password} = req.body
-
  await appDataSource.query(
   `INSERT INTO users(
     name, email, password
-    ) VALUES (?, ?, ?);
-  `,
+    ) VALUES (?, ?, ?);`,
   [ name , email, password ]
  );
 
@@ -48,8 +46,8 @@ app.post("/signup", async(req, res, next) => {
   });
 
 const serverStart = async () => { 
-  app.listen(process.env.PORT, function () {
-    console.log('server listening on port 3000')
+  app.listen(PORT, () => {
+    console.log(`server listening on port ${PORT}`)
 });
 };
 

@@ -10,4 +10,4 @@ CREATE TABLE users (
     PRIMARY KEY(id)
 );
 -- migrate:down
-
+DROP TABLE users;
