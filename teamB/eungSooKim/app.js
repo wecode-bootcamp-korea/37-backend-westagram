@@ -30,12 +30,18 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));
 
-const server = http.createServer(app);
+
+app.use(express.json());
+app.use(cors());
+app.use(morgan('tiny'));
+
+const server = http.createServer(app)
 const PORT = process.env.PORT;
 
 app.get("/ping", (req, res) => {
   res.json({ message: "pong" });
 });
+
 
 app.post("/users", async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -51,6 +57,7 @@ app.post("/users", async (req, res, next) => {
   );
   res.status(201).json({ message: "userCreated" });
 });
+
 
 const start = async () => {
   server.listen(PORT, () => console.log(`server is listening on ${PORT}`));
