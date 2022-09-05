@@ -20,6 +20,14 @@ const signUp = async (name, email, password, profileImage) => {
   return createUser;
 };
 
+const userPosts = async (userId) =>{
+  const watchUserpost = await userDao.watchUserpost(
+    userId
+  );
+
+  return watchUserpost
+}
+
 module.exports = {
-  signUp
+  signUp, userPosts,
 };
