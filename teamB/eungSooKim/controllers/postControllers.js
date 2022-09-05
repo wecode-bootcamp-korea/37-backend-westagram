@@ -19,6 +19,13 @@ const writePost = async (req, res) => {
   }
 };
 
+const postsList = {
+  try{
+    await postService.readPosts
+  }
+
+}
+
 module.exports = {
-  writePost
+  writePost, postsList
 };
