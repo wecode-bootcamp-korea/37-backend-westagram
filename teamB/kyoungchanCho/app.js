@@ -5,10 +5,7 @@ const http = require("http");
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const { DataSource, Connection } =require('typeorm');
-const { restart } = require('nodemon');
-const { application } = require('express');
-const { ppid } = require('process');
+const { DataSource } =require('typeorm');
 
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -35,13 +32,11 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
-//health check
 app.get("/ping", (req, res) => {
     res.json({ message : "pong"})
 })
 
-//유저 회원 등록
-app.post("/users", async (req, res, next) => {
+app.post("/users/signup", async (req, res, next) => {
     const { name, email, profileImage, password } = req.body
 
     await database.query(
@@ -57,7 +52,6 @@ app.post("/users", async (req, res, next) => {
     res.status(201).json({ message : "userCreated" })
 })
 
-//게시글 유저아이디 별 등록
 app.post("/posts", async (req, res, next) => {
     const { title, content, userId } = req.body
 
@@ -73,10 +67,8 @@ app.post("/posts", async (req, res, next) => {
     res.status(201).json({ message : "postCreated"})
 })
 
-//전체 게시글 조회
 app.get("/posts", async (req, res) =>{
-
-    await database.query(
+    const posts = await database.query(
         `SELECT 
             users.id AS userId,
             users.profile_image AS usersProfileImage,
@@ -84,50 +76,36 @@ app.get("/posts", async (req, res) =>{
             posts.title AS postingTitle,
             posts.content AS postingContent
         FROM posts JOIN users ON posts.user_id = users.id;
-        `,(err, rows) => {
-            if(err){
-                console.log("Error : Could not load data from data source.");
-            } else {
-                res.status(200).json({ "data" : rows})
-
-            }
-        }
+        `
     );
+    res.status(200).json({ "data" : posts})            
 })
 
-//한 유저의 게시글 조회
-app.get('/posts/:userId', async (req, res) =>{
+app.get('/users/:userId/posts', async (req, res, next) => {
     const userId = req.params.userId;
-
-    await database.query(
+    const [postsByUser] = await database.query(
         `SELECT
             users.id AS userId,
             users.profile_image AS userProfileImage
         FROM users
-        where users.id = ${userId}
+        where users.id = ?
         `,
-        (err, data) => {
-            database.query(
-                `SELECT
-                    posts.id AS postingId,
-                    posts.content AS postingContent,
-                    posts.title AS postsTitle
-                FROM posts
-                WHERE posts.user_id = ${userId}                   
-                `,(err, postingsInfo) => {
-                    if(err) {
-                        console.log("Error : Could not load data from data source.");
-                    } else {
-                        data[0]["positngs"] = postingsInfo           
-                        res.status(200).json({"data":data[0]})
-                    }
-                }
-            )
-        }        
-    )
+        [userId]
+    );
+    const selectedPosts = await database.query(
+        `SELECT
+            posts.id AS postingId,
+            posts.content AS postingContent,
+            posts.title AS postsTitle
+        FROM posts
+        WHERE posts.user_id = ?          
+        `,
+        [userId]
+    );
+    postsByUser["positngs"] = selectedPosts
+    res.status(200).json({"data":postsByUser})
 })
 
-//게시글 수정하기
 app.patch('/posts/:postId', async (req, res, next) => {
     const postId = req.params.postId
     const { title } = req.body 
@@ -135,11 +113,11 @@ app.patch('/posts/:postId', async (req, res, next) => {
     await database.query(
         `UPDATE posts SET
             posts.title = ?
-        WHERE posts.id = ${postId}
+        WHERE posts.id = ?
         `,
-        [ title ]
+        [ title, postId ]
     );
-    await database.query(
+    const [patchedPost] = await database.query(
         `SELECT
             users.id AS userId,
             users.name AS userName,
@@ -148,30 +126,25 @@ app.patch('/posts/:postId', async (req, res, next) => {
             posts.content AS postingContent
         FROM users 
         JOIN posts ON posts.user_id = users.id
-        WHERE posts.id = ${postId}
-        `,(err, rows) => {
-            if(err) {
-                console.log("Error : Could not corrected data from data source.");
-            } else {
-            res.status(201).json({"data" : rows[0]})
-            }
-        }
+        WHERE posts.id = ?
+        `,
+        [ postId ]
     )
-})
+    res.status(201).json({"data" : patchedPost})            
+});
 
-//게시글 삭제하기
-app.delete('/posts/:postId', async (req, res) => {
+app.delete('/posts/:postId', async (req, res, next) => {
     const postId = req.params.postId
-
     await database.query(
         `DELETE
         FROM posts
-        WHERE posts.id = ${postId}
-        `)
-        res.status(200).json({ message : "postingDeleted"})
-}) 
+        WHERE posts.id = ?
+    `,
+    [ postId ]
+    )
+    res.status(200).json({ message : "postingDeleted"})
+}); 
 
-//좋아요 누르기
 app.post('/posts/likesdata', async (req, res) => {
     const { userId, postId } = req.body
 
@@ -183,7 +156,7 @@ app.post('/posts/likesdata', async (req, res) => {
         `,
         [ userId, postId ]
     );
-        res.status(201).json({ message : "likeCreated"})    
+    res.status(201).json({ message : "likeCreated"})    
 })
 
 const start = async () => {
