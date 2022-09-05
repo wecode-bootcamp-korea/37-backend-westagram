@@ -112,11 +112,9 @@ app.get('/posts', async (req, res, next) => {
          FROM posts as p
          INNER JOIN users as u
          ON posts.user_id = users.id
-        `,
-        (err, rows) => {
-            res.status(200).json({ data:rows });
-        }
+        `
     )
+    res.status(200).json({ data:rows });
 })
 
 //post lookup by userId
@@ -134,19 +132,17 @@ app.get('/posts/:userId', async (req, res, next) => {
         INNER JOIN users as u
         ON posts.user_id = users.id
         WHERE posts.user_id = ${userId}
-        `,
-        (err, row) => {
-            res.status(200).json({
-                'userId' : row.userId,
-                'userProfileImage' : row.userProfileImage,
-                'postings' : [{
-                    'postingId' : row.postingId,
-                    'postingImageUrl' : row.postingImageUrl,
-                    'postingContent' : row.postingContent
-                }]
-            })
-        }
+        `
     )
+    res.status(200).json({
+        'userId' : row.userId,
+        'userProfileImage' : row.userProfileImage,
+        'postings' : [{
+            'postingId' : row.postingId,
+            'postingImageUrl' : row.postingImageUrl,
+            'postingContent' : row.postingContent
+        }]
+    })
 })
 
 // post update
@@ -175,11 +171,9 @@ app.patch('/posts/:postId', async (req, res, next) => {
         FROM posts as p
         INNER JOIN users as u
         ON users.id = posts.user_id
-        `,
-        (err, rows) => {
-            res.status(200).json({ data:rows })
-        }
+        `
     )
+    res.status(200).json({ data:rows })
 })
 
 //post delete
