@@ -35,13 +35,13 @@ appDataSource.initialize()
   })
 
   app.post("/users", async (req, res, next) => {
-    const { name, email, profile_image, password } = req.body;
+    const { name, email, profileImage, password } = req.body;
 
   await appDataSource.query(
     `INSERT INTO users(
       name,
       email,
-      profile_image,
+      profileImage,
       password
     ) VALUES (?, ?, ?, ?);
     `,
