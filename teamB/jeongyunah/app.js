@@ -5,7 +5,6 @@ const cors = require('cors');
 const logger = require('morgan');
 const app = express(); 
 const { DataSource } = require('typeorm')
-const PORT = process.env.PORT;
 
 const appDataSource = new DataSource({   
   type: process.env.TYPEORM_CONNECTION,
@@ -27,6 +26,7 @@ appDataSource.initialize()
 app.use(logger('dev')); 
 app.use(cors()) 
 app.use(express.json()) 
+const PORT = process.env.PORT
 
 app.get('/ping', function (req, res) {
   res.json(200, { message: 'pong'})

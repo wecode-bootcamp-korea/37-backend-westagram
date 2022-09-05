@@ -1,6 +1,6 @@
 -- migrate:up
-CREATE TABLE likes(
-    id int not null auto_increment,
+CREATE TABLE likes (
+    Id int not NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     post_id INT NOT NULL,
     PRIMARY KEY (id),
@@ -9,4 +9,4 @@ CREATE TABLE likes(
 );
 
 -- migrate:down
-DROP TABLE likes;
+
