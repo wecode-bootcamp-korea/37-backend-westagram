@@ -1,4 +1,4 @@
 node_modules/
 .env
 .vscode
-schema.sql
+db/schema.sql
