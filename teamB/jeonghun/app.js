@@ -13,35 +13,30 @@ const appDataSource = new DataSource({
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE
-});
+   });
 
 appDataSource.initialize()
- .then(() => {
-  console.log('Data Source has been initialized!')  
- })
- .catch((error) => {
-  console.error('Error during Data source initialization', error);
- });
+  .then(() => {
+   console.log('Data Source has been initialized!')  
+  })
+  .catch((error) => {
+   console.error('Error during Data source initialization', error);
+});
 
 const app = express()
-
-const server = http.createServer(app)
-const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 
 app.get('/ping', function (req, res, next) {
-    res.status(201).json({message: 'pong'});
-});
+    res.status(200).json({message: 'pong'});
+  });
 
-app.post('/user/sign', async (req, res, next) => {
-  const { name, email, profileImage, password } = req.body
+app.post('/user/signup', async (req, res, next) => {
+   const { name, email, profileImage, password } = req.body
 
-  // console.log(req)
-
-  await appDataSource.query(
+   await appDataSource.query(
     `INSERT INTO users(
       name,
       email,
@@ -50,22 +45,21 @@ app.post('/user/sign', async (req, res, next) => {
       ) VALUES (?, ?, ?, ?);
       `,
       [ name, email, profileImage, password ]
-    );
-     res.status(201).json({ message : 'userCreated'});
-    })
+     );
+        res.status(201).json({ message : 'userCreated'});
+   })
 
-    app.post('/post', async (req, res, next) => {
-      const { title, content } = req.body
-    
-      // console.log(req)
+  app.post('/post', async (req, res, next) => {
+      const { title, content, userid } = req.body
     
       await appDataSource.query(
         `INSERT INTO posts(
           title,
-          content
+          content,
+          user_id
           ) VALUES (?, ?);
           `,
-          [ title, content ]
+          [ title, content, userid ]
         );
          res.status(201).json({ message : 'successfully created'});
         })    
@@ -84,15 +78,15 @@ app.post('/user/sign', async (req, res, next) => {
              res.status(201).json({ message : 'successfully created'});
             })   
 
-app.get('/user', async (req, res) => {
-  await appDataSource.manager.query(
-    `SELECT
-         b.id,
-         b.title,
-         b.description,
-         b.cover_image
-        FROM users b`
-    ,(err, rows) => {
+  app.get('/user', async (req, res) => {
+    await appDataSource.manager.query(
+      `SELECT
+          u.id,
+          u.title,
+          u.description,
+          u.cover_image
+         FROM users u`
+      ,(err, rows) => {
          res.status(200).json(rows);
     })
 });
@@ -100,13 +94,13 @@ app.get('/user', async (req, res) => {
 app.get('/users-with-posts', async (req, res) => {
   await appDataSource.manager.query(
     `SELECT
-         users.id,
-         users.title,
-         users.description,
+         users.name,
+         users.email,
+         users.profile_image,
          users.cover_image,
-         posts.first_name,
-         posts.last_name,
-         posts.age
+         posts.title,
+         posts.content,
+         posts.user_id
         FROM users_posts ba
         INNER JOIN posts ON ba.post_id = posts.id
         INNER JOIN users ON ba.user_id = users.id`
@@ -115,9 +109,8 @@ app.get('/users-with-posts', async (req, res) => {
     })
 });
 
-const start = async () => {
-  server.listen(PORT, () => console.log(`server is listening on ${PORT}`));
-}
-
-start()
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Listening to request on port ${PORT}`);
+});
 
