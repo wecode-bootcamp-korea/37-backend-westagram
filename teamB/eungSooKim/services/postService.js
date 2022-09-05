@@ -10,6 +10,11 @@ const writePost = async (title, content, userId) => {
       return titleAndContent;
   };
 
+  const postsList =async()=>{
+    const A = await postDao.allPosts();
+    return A;
+    }
+
 module.exports = {
-  writePost
+  writePost, postsList
 };

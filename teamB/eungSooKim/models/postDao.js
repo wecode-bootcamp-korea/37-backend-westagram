@@ -36,6 +36,27 @@ const titleAndContent = async ( title, content, userId) => {
 	}
 };
 
+const allPosts = async ()=>{
+  try {
+    return await database.query(
+    `SELECT posts.user_id AS userId,
+                users.profile_image AS userProfileImage,
+                posts.id AS postingId,
+                posts.title AS postingTitle,
+                posts.profile_image AS potingImageUrl,
+                posts.content As postingContent
+         FROM users JOIN posts ON users.id = posts.user_id`
+         ,async(err, rows) => {
+          return await rows;
+         }      
+    )
+  } catch (err) {
+    const error = new Error('INVALID_DATA_INPUT');
+		error.statusCode = 500;
+		throw error;
+  }
+};
+
 module.exports = {
-  titleAndContent
+  titleAndContent, allPosts
 }
