@@ -33,13 +33,11 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.get('/ping', function (req, res, next) {
-    res.status(201).json({message: 'pong'});
+    res.status(200).json({message: 'pong'});
 });
 
 app.post('/user/sign', async (req, res, next) => {
   const { name, email, profileImage, password } = req.body
-
-  // console.log(req)
 
   await appDataSource.query(
     `INSERT INTO users(
@@ -55,17 +53,16 @@ app.post('/user/sign', async (req, res, next) => {
     })
 
     app.post('/post', async (req, res, next) => {
-      const { title, content } = req.body
-    
-      // console.log(req)
+      const { title, content, user_id } = req.body
     
       await appDataSource.query(
         `INSERT INTO posts(
           title,
-          content
-          ) VALUES (?, ?);
+          content,
+          user_id
+          ) VALUES (?, ?, ?);
           `,
-          [ title, content ]
+          [ title, content, user_id ]
         );
          res.status(201).json({ message : 'successfully created'});
         })    
@@ -87,10 +84,10 @@ app.post('/user/sign', async (req, res, next) => {
 app.get('/user', async (req, res) => {
   await appDataSource.manager.query(
     `SELECT
-         b.id,
-         b.title,
-         b.description,
-         b.cover_image
+         u.name,
+         u.email,
+         u.profile_image,
+         u.password
         FROM users b`
     ,(err, rows) => {
          res.status(200).json(rows);
@@ -100,13 +97,13 @@ app.get('/user', async (req, res) => {
 app.get('/users-with-posts', async (req, res) => {
   await appDataSource.manager.query(
     `SELECT
-         users.id,
-         users.title,
-         users.description,
-         users.cover_image,
-         posts.first_name,
-         posts.last_name,
-         posts.age
+         users.name,
+         users.email,
+         users.profile_image,
+         users.password,
+         posts.title,
+         posts.content,
+         posts.user_id
         FROM users_posts ba
         INNER JOIN posts ON ba.post_id = posts.id
         INNER JOIN users ON ba.user_id = users.id`
