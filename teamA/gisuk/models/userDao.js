@@ -35,9 +35,7 @@ const userPost = async ( userId ) => {
             FROM posts
             WHERE posts.user_id = ${userId};`,
         );
-        const result = user[0];
-        result.posting = post;
-        return result;
+        return [user, post];
     } catch (err) {
         const error = new Error(`INVALID_DATA_INPUT`);
         error.statusCode = 500;

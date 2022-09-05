@@ -8,9 +8,9 @@ router.get("/search", postController.search);
 
 router.post("/up", postController.postUp);
 
-router.patch("/edit/:postId", postController.postEdit);
+router.patch("/:postId", postController.postEdit);
 
-router.delete("/delete/:postId", postController.postDelete);
+router.delete("/:postId", postController.postDelete);
 
 
 module.exports = {

@@ -1,10 +1,12 @@
 const userDao = require("../models/userDao");
 
 const userPost = async ( userId ) => {
-    const userPost = await userDao.userPost(
+    const [user, post] = await userDao.userPost(
         userId
     );
-    return userPost;
+    const result = user[0];
+    result.posting = post;
+    return result;
 }
 
 const signUp = async ( name, email, password, profileImage ) => {
