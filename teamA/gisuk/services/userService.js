@@ -1,12 +1,16 @@
 const userDao = require("../models/userDao");
+const bcrypt = require("bcrypt");
+
+const makeHash = async (password, saltRound) => {
+    return await bcrypt.hash(password, saltRound);
+}
 
 const userPost = async ( userId ) => {
-    const [user, post] = await userDao.userPost(
+    const [ user, post ] = await userDao.userPost(
         userId
     );
-    const result = user[0];
-    result.posting = post;
-    return result;
+    user.posting = post;
+    return user;
 }
 
 const signUp = async ( name, email, password, profileImage ) => {
@@ -18,10 +22,13 @@ const signUp = async ( name, email, password, profileImage ) => {
         err.statusCode = 400;
         throw err;
     }
+
+    const hashPassword = await makeHash(password,12);
+
     const createUser = await userDao.createUser(
         name,
         email,
-        password,
+        hashPassword,
         profileImage
     );
     return createUser;

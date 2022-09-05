@@ -20,7 +20,7 @@ appDataSource.initialize()
 
 const userPost = async ( userId ) => {
     try {
-        const user = await appDataSource.query(
+        const [user] = await appDataSource.query(
             `SELECT
                 users.id as userId,
                 users.profile_image as userProfileImage
@@ -43,7 +43,7 @@ const userPost = async ( userId ) => {
     }
 };
 
-const createUser = async ( name, email, password, profileImage ) => {
+const createUser = async ( name, email, hashPassword, profileImage ) => {
     try {
         return await appDataSource.query(
             `INSERT INTO users(
@@ -53,7 +53,7 @@ const createUser = async ( name, email, password, profileImage ) => {
                 profile_image
             ) VALUES (?, ?, ?, ?)
             `,
-            [ name, email, password, profileImage ]
+            [ name, email, hashPassword, profileImage ]
         );
     } catch (err) {
         const error = new Error(`INVALID_DATA_INPUT`);
