@@ -6,9 +6,9 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const { DataSource, Connection } =require('typeorm');
-const { restart } = require('nodemon');
-const { application } = require('express');
-const { ppid } = require('process');
+// const { restart } = require('nodemon');
+// const { application } = require('express');
+// const { ppid } = require('process');
 
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -34,6 +34,8 @@ database.initialize()
 app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
+//app.use(routes);
+//console.log(http)
 
 //health check
 app.get("/ping", (req, res) => {
@@ -41,7 +43,7 @@ app.get("/ping", (req, res) => {
 })
 
 //유저 회원 등록
-app.post("/users", async (req, res, next) => {
+app.post("/users/signup", async (req, res, next) => {
     const { name, email, profileImage, password } = req.body
 
     await database.query(
@@ -128,7 +130,7 @@ app.get('/posts/:userId', async (req, res) =>{
 })
 
 //게시글 수정하기
-app.patch('/posts/:postId', async (req, res, next) => {
+app.patch('/posts/:postId', async (req, res) => {
     const postId = req.params.postId
     const { title } = req.body 
 
@@ -139,7 +141,7 @@ app.patch('/posts/:postId', async (req, res, next) => {
         `,
         [ title ]
     );
-    await database.query(
+    database.query(
         `SELECT
             users.id AS userId,
             users.name AS userName,
