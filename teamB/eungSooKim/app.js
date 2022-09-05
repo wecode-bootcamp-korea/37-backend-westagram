@@ -144,7 +144,7 @@ app.delete("/posts/delete/:postId", async (req, res) => {
     `DELETE FROM posts
          WHERE posts.id = ${postId}`
   );
-  res.status(200).json({ message: "postingDeleted" });
+  res.status(200).json({ message: "postingDeleted!" });
 });
 
 app.post("/likes/click/:userId", async (req, res) => {
