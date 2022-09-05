@@ -1,6 +1,6 @@
 -- migrate:up
 create table posts (
-    id int not null,
+    id int not null auto_increment,
     title varchar(100) not null,
     content varchar(3000) null,
     posting_image varchar(1000) null,

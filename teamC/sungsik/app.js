@@ -102,7 +102,7 @@ app.post('/likes/:postId', async (req, res, next) => {
 //posts lookup
 app.get('/posts', async (req, res, next) => {
     
-    await database.query(
+    const data = await database.query(
         `SELECT 
             u.id as userId, 
             u.profile_image as userProfileImage,
@@ -111,17 +111,17 @@ app.get('/posts', async (req, res, next) => {
             p.content as postingContent
          FROM posts as p
          INNER JOIN users as u
-         ON posts.user_id = users.id
+         ON p.user_id = u.id
         `
     )
-    res.status(200).json({ data:rows });
+    res.status(200).json({ data:data });
 })
 
 //post lookup by userId
 app.get('/posts/:userId', async (req, res, next) => {
     const { userId } = req.params;
     
-    await database.query(
+    const data = await database.query(
         `SELECT
             u.id as userId,
             u.profile_image as userProfileImage,
@@ -130,19 +130,19 @@ app.get('/posts/:userId', async (req, res, next) => {
             p.content as postingContent
         FROM posts as p
         INNER JOIN users as u
-        ON posts.user_id = users.id
-        WHERE posts.user_id = ${userId}
+        ON p.user_id = u.id
+        WHERE p.user_id = ${userId}
         `
     )
-    res.status(200).json({
-        'userId' : row.userId,
-        'userProfileImage' : row.userProfileImage,
+    res.status(200).json({ data: {
+        'userId' : data[0].userId,
+        'userProfileImage' : data[0].userProfileImage,
         'postings' : [{
-            'postingId' : row.postingId,
-            'postingImageUrl' : row.postingImageUrl,
-            'postingContent' : row.postingContent
+            'postingId' : data[0].postingId,
+            'postingImageUrl' : data[0].postingImageUrl,
+            'postingContent' : data[0].postingContent
         }]
-    })
+    }})
 })
 
 // post update
@@ -161,7 +161,7 @@ app.patch('/posts/:postId', async (req, res, next) => {
         [ title, content, posting_image, postId]
     )
     
-    await database.query(
+    const data = await database.query(
         `SELECT
             u.id as userId,
             u.name as userName,
@@ -170,10 +170,10 @@ app.patch('/posts/:postId', async (req, res, next) => {
             p.content as postingContent
         FROM posts as p
         INNER JOIN users as u
-        ON users.id = posts.user_id
+        ON u.id = p.user_id
         `
     )
-    res.status(200).json({ data:rows })
+    res.status(200).json({ data:data })
 })
 
 //post delete
