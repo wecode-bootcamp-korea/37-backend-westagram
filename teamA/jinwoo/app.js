@@ -33,7 +33,6 @@ app.get("/ping", (req, res) => {
   res.status(200).json({ message : "pong" });
 })
 
-// 전체 게시글 조회하기
 app.get("/posts", async (req, res) => {
   await mysqlDataSource.query(
     `SELECT
@@ -51,8 +50,7 @@ app.get("/posts", async (req, res) => {
       })
 });
 
-// 유저의 게시글 조회하기
-app.get("/posts/:userId", async (req, res, next) => {
+app.get("/users/:userId/posts", async (req, res, next) => {
   const userId = req.params.userId;
 
   const userInfo = await mysqlDataSource.query(
@@ -77,7 +75,6 @@ app.get("/posts/:userId", async (req, res, next) => {
       res.status(200).json({ "data" : userInfo[0] });
     });
 
-// 유저 회원가입 하기
 app.post("/signup", async (req, res, next) => {
   const { name, email, profileImage, password } = req.body
   await mysqlDataSource.query(
@@ -94,7 +91,6 @@ app.post("/signup", async (req, res, next) => {
   res.status(201).json({ message : "Successfully created" });
 })
 
-// 게시물 등록하기
 app.post("/postup", async (req, res) => {
   const { title, content, userId } = req.body
   await mysqlDataSource.query(
@@ -111,7 +107,6 @@ app.post("/postup", async (req, res) => {
   res.status(201).json({ message : "postCreated" });
 })
 
-// 좋아요 누르기
 app.post("/like", async (req, res) => {
   const { userId, postId } = req.body
   await mysqlDataSource.query(
@@ -127,8 +122,7 @@ app.post("/like", async (req, res) => {
   res.status(201).json({ message : "likeCreated" })
 })
 
-// 게시글 수정하기
-app.patch("/postsmodify/:postId", async (req, res, next) => {
+app.patch("/posts/:postId", async (req, res, next) => {
   const postId = req.params.postId
   const { title, content } = req.body
 
@@ -138,12 +132,12 @@ app.patch("/postsmodify/:postId", async (req, res, next) => {
       title = ?,
       content = ?
     WHERE
-      id = ${postId}
+      id = ?
     `,
-    [ title, content ]
+    [ title, content , postId ]
   );
 
-  await mysqlDataSource.query(
+  const postsinfo = await mysqlDataSource.query(
     `SELECT
       usersWesta.id as userId,
       usersWesta.name as userName,
@@ -153,20 +147,20 @@ app.patch("/postsmodify/:postId", async (req, res, next) => {
     FROM usersWesta
     INNER JOIN postsWesta
     ON usersWesta.id = postsWesta.user_id
-    WHERE postsWesta.id = ${postId};
-    `
-    ,(err, rows) => {
-      res.status(200).json({ "data" : rows});
-    })
-});
+    WHERE postsWesta.id = ?;
+    `, [ postId ]
+    )
+      res.status(200).json({ "data" : postsinfo[0] });
+    }
+);
 
-// 게시글 삭제하기
-app.delete("/postdel/:postId", async(req, res) => {
+app.delete("/posts/:postId", async(req, res) => {
   const { postId } = req.params;
   await mysqlDataSource.query(
     `DELETE FROM postsWesta
-    WHERE postsWesta.id = ${postId}
-    `);
+    WHERE postsWesta.id = ?
+    `, [ postId ]
+    );
     res.status(200).json({ message : "successfully deleted" });
 })
 
