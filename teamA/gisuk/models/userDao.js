@@ -1,13 +1,4 @@
-const { DataSource } = require('typeorm');
-
-const appDataSource = new DataSource({
-  type: process.env.TYPEORM_CONNECTION,
-  host: process.env.TYPEORM_HOST,
-  port: process.env.TYPEORM_PORT,
-  username: process.env.TYPEORM_USERNAME,
-  password: process.env.TYPEORM_PASSWORD,
-  database: process.env.TYPEORM_DATABASE
-})
+const appDataSource = require("../orm");
 
 appDataSource.initialize()
     .then(() => {
@@ -43,6 +34,24 @@ const userPost = async ( userId ) => {
     }
 };
 
+const signIn = async ( email ) => {
+    try {
+        const [result] = await appDataSource.query(
+            `SELECT
+                users.id,
+                users.email,
+                users.password
+            FROM users
+            WHERE users.email = "${email}";`
+        );
+        return result;
+    } catch (err) {
+        const error = new Error(`INVALID_DATA_INPUT`);
+        error.statusCode = 500;
+        throw error;
+    }
+}
+
 const createUser = async ( name, email, hashPassword, profileImage ) => {
     try {
         return await appDataSource.query(
@@ -65,5 +74,6 @@ const createUser = async ( name, email, hashPassword, profileImage ) => {
 
 module.exports = {
     userPost,
+    signIn,
     createUser
 }
