@@ -45,7 +45,7 @@ const watchUserpost = async (userId) => {
             users.profile_image AS userProfileId
          FROM users WHERE users.id = ${userId}`
     );
-    result.userIdrow = rows[0].userId;
+    result.userId = rows[0].userId;
     result.userProfileId = rows[0].userProfileId;
     const postInfo = await database.query(
       `SELECT posts.id AS postingID, 

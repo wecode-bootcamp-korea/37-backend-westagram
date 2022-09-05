@@ -54,7 +54,36 @@ const allPosts = async () => {
   }
 };
 
+const modify = async (title, content, postId) => {
+  console.log("1111")
+  try {
+    await database.query(
+          `UPDATE posts
+         SET title = ?,
+             content = ?
+         WHERE posts.id= ${postId}
+        `,
+    [title, content]
+  
+    );
+    return await database.query(
+          `SELECT users.id AS userId,
+                users.name AS userName,
+                posts.id AS postingId,
+                posts.title AS postingTitle,
+                posts.content AS postingContent
+         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ${postId}`
+    )
+    
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 500;
+    throw error;
+  }
+};
+
 module.exports = {
   titleAndContent,
   allPosts,
+  modify,
 };
