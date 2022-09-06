@@ -10,9 +10,6 @@ const cors = require("cors");
 const app = express();
 const morgan = require("morgan");
 
-// router
-const routes = require("./routes")
-
 app.use(express.json());
 app.use(cors());
 app.use(morgan("combined"));
