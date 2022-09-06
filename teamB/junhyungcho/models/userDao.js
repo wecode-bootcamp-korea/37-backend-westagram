@@ -1,6 +1,5 @@
 //데이터베이스와 연결, initialize 객체를 호출
 
-
 const { DataSource } = require('typeorm');
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -14,33 +13,68 @@ const database = new DataSource({
 database
     .initialize()
     .then(() => {
-        console.log("Data Source has been initialized!");
+        console.log("User data Source has been initialized!");
     })
     .catch((err) => {
         console.error('Error occurred during Data Source initialization', err);
         database.destroy();
-    })
-    .finally(() => console.log("==========================================="));
+    });
 
-const createUser = async ( name, email, password, profileImage ) => {
+const createUser = async (first_name, last_name, age, email, password, profile_image) => {
     try {
-        return await database.query(
+        const user = await database.query(
             `INSERT INTO users(
-                name,
-                email,
-                password,
-                profile_image
-            ) VALUES (?, ?, ?, ?);
+                 first_name,
+                 last_name,
+                 age,
+                 email,
+                 password,
+                 profile_image
+                ) 
+                VALUES (?, ?, ?, ?, ?, ?);
             `,
-            [ name, email, password, profileImage ]
+            [ first_name, last_name, age, email, password, profile_image ]
         );
-    } catch (err) {
+
+        return user;
+    }
+    
+    catch (err) {
         const error = new Error('INVALID_DATA_INPUT');
         error.statusCode = 500;
         throw error;
     }
 };
 
+const getAllInfo = async (userId) => {
+    try {
+        const [ user ] = await database.query(
+            `SELECT
+                users.id AS userId, 
+                users.profile_image AS userProfileImage
+            FROM users WHERE users.id = ?`
+            ,[userId]
+        );
+        
+        user.postings = await database.query(
+            `SELECT 
+                posts.id AS postingId, 
+                posts.cover_image AS postingImageUrl, 
+                posts.description AS postingContent
+            FROM posts WHERE ${userId} = users_id`
+        );
+
+        return user;
+    }
+
+    catch (err) {
+        const error = new Error('INBALID_DATA_INPUT');
+        error.statusCode = 500;
+        throw error;
+    }
+}
+
 module.exports = {
-    createUser
+    createUser,
+    getAllInfo
 }

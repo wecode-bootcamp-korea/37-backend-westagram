@@ -2,25 +2,45 @@
 //presentation layer
 //res, req 담당
 
-const userService = require('../services/userService');
+const { userService } = require('../services');
 
 const signUp = async (req, res) => {
     try {
-        const { name, email, password, profileImage } = req.body;
+        const { first_name, last_name, age, email, password, profile_image } = req.body;
 
-        if ( !name || !email || !password || !profileImage ) {
+        if ( !first_name || !last_name || !email || !password ) {
             return res.status(400).json({ message: "KEY_ERROR" });
         }
 
-        await userService.signUp( name, email, password, profileImage);
+        const user = await userService.signUp( first_name, last_name, age, email, password, profile_image );
 
-        res.status(201).json({ message: 'SIGNUP_SUCCESS' });
-    } catch (err) {
-        console.log(err);
+        return res.status(201).json({ data: user });
+    }
+    
+    catch (err) {
         return res.status(err.statusCode || 500).json({ message: err.message});
     }
 };
 
+const postList = async (req, res) => {
+    try {
+        let userId = req.params.userId;
+
+        if ( !userId ) {
+            return res.status(400).json({ message: "KEY_ERROR" });
+        }
+
+        const postList = await userService.postList(userId);
+
+        return res.status(200).json({ data: postList });
+    }
+
+    catch (err) {
+        return res.status(err.statusCode || 500).json({ message: err.message});
+    }
+}
+
 module.exports = {
-    signUp
+    signUp,
+    postList
 }

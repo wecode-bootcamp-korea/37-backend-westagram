@@ -4,24 +4,22 @@ const http = require('http');
 const express = require('express');
 const cors = require('cors'); //web 3.0 세대 프/백 간 통신 완화
 const morgan = require('morgan');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 
-const route = require('./routes');
+const route = require('./routers');
 
 const app = express();
 
-const { DataSource } = require('typeorm');
-const database = new DataSource({
-    type: process.env.TYPEORM_CONNECTION,
-    host: process.env.TYPEORM_HOST,
-    port: process.env.TYPEORM_PORT,
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE
-});
+// const { DataSource } = require('typeorm');
+// const database = new DataSource({
+//     type: process.env.TYPEORM_CONNECTION,
+//     host: process.env.TYPEORM_HOST,
+//     port: process.env.TYPEORM_PORT,
+//     username: process.env.TYPEORM_USERNAME,
+//     password: process.env.TYPEORM_PASSWORD,
+//     database: process.env.TYPEORM_DATABASE
+// });
 
-database.initialize()
+// database.initialize()
 // DB와 비동기로 연결 * promise() 공부!!
 //외부 요청 내용값, body를 parsing|bodyparser를 대체
 
@@ -55,124 +53,124 @@ const start = async () => {
 
 start();
 
-//Register
-app.post('/users', async (req, res, next) => {
-    const { first_name, last_name, age } = req.body;
+// //Register
+// app.post('/users', async (req, res, next) => {
+//     const { first_name, last_name, age } = req.body;
 
-    await database.query(
-        `INSERT INTO users(
-            first_name,
-            last_name,
-            age
-        ) VALUES (?, ?, ?);
-        `,
-        [ first_name, last_name, age ]
-    );
+//     await database.query(
+//         `INSERT INTO users(
+//             first_name,
+//             last_name,
+//             age
+//         ) VALUES (?, ?, ?);
+//         `,
+//         [ first_name, last_name, age ]
+//     );
 
-    res.status(201).json({ message : "userCreated" });
-});
+//     res.status(201).json({ message : "userCreated" });
+// });
 
-//Create post
-app.post('/posts', async (req, res, next) => {
-    const { title, description, coverImage, users_id } = req.body;
+// //Create post
+// app.post('/posts', async (req, res, next) => {
+//     const { title, description, coverImage, users_id } = req.body;
 
-    await database.query(
-        `INSERT INTO posts(
-            title,
-            description,
-            cover_image,
-            users_id
-        ) VALUES (?, ?, ?, ?);
-        `,
-        [ title, description, coverImage, users_id ]
-    );
+//     await database.query(
+//         `INSERT INTO posts(
+//             title,
+//             description,
+//             cover_image,
+//             users_id
+//         ) VALUES (?, ?, ?, ?);
+//         `,
+//         [ title, description, coverImage, users_id ]
+//     );
 
-    res.status(201).json({ message : "postingCreated" });
-});
+//     res.status(201).json({ message : "postingCreated" });
+// });
 
-// Get all posts
-app.get('/posts', async (req, res) => {
-    await database.query(
-        `SELECT
-            p.id,
-            p.title,
-            p.description,
-            p.cover_image,
-            p.users_id
-        FROM posts p
-        `,(err, rows) => {
-            res.status(200).json(rows);
-    });
-})
+// // Get all posts
+// app.get('/posts', async (req, res) => {
+//     await database.query(
+//         `SELECT
+//             p.id,
+//             p.title,
+//             p.description,
+//             p.cover_image,
+//             p.users_id
+//         FROM posts p
+//         `,(err, rows) => {
+//             res.status(200).json(rows);
+//     });
+// })
 
-//Get all posts along with users
-app.get('/users/:userId', async (req, res) => {
-    let userId = req.params.userId; // 주소에 포함된 변수를 담는다.
+// //Get all posts along with users
+// app.get('/users/:userId', async (req, res) => {
+//     let userId = req.params.userId; // 주소에 포함된 변수를 담는다.
     
-    await database.query( //주소 바깥, ? 이후 변수를 담는다. &로 여러 데이터를 넘길 수 있다.
-        `SELECT
-            users.id AS userId, 
-            users.age AS userAge
-        FROM users WHERE users.id = ${userId}
-        `, (err, rows) => {
-            let userRow = rows;
-            database.query(
-                `SELECT 
-                    posts.id AS postingId, 
-                    posts.cover_image AS postingImageUrl, 
-                    posts.description AS postingContent
-                FROM posts WHERE ${userId} = users_id`,
-                (err, rows) => {
-                    userRow[0].postings = rows;
-                    res.status(200).json({ data : userRow[0] });
-                }
-            )
-        }
-    )
-});
+//     await database.query( //주소 바깥, ? 이후 변수를 담는다. &로 여러 데이터를 넘길 수 있다.
+//         `SELECT
+//             users.id AS userId, 
+//             users.age AS userAge
+//         FROM users WHERE users.id = ${userId}
+//         `, (err, rows) => {
+//             let userRow = rows;
+//             database.query(
+//                 `SELECT 
+//                     posts.id AS postingId, 
+//                     posts.cover_image AS postingImageUrl, 
+//                     posts.description AS postingContent
+//                 FROM posts WHERE ${userId} = users_id`,
+//                 (err, rows) => {
+//                     userRow[0].postings = rows;
+//                     res.status(200).json({ data : userRow[0] });
+//                 }
+//             )
+//         }
+//     )
+// });
 
-//Update a single user by its primary key
-app.patch('/posts', async(req, res) => {
-    const { title, description, coverImage, postId } = req.body;
+// //Update a single user by its primary key
+// app.patch('/posts', async(req, res) => {
+//     const { title, description, coverImage, postId } = req.body;
 
-    await database.query(
-        `UPDATE posts
-        SET title = ?,
-            description = ?,
-            cover_image = ?
-        WHERE id = ?
-        `,
-        [ title, description, coverImage, postId ]
-    );
-        res.status(201).json({ message : "successfully updated" });
-});
+//     await database.query(
+//         `UPDATE posts
+//         SET title = ?,
+//             description = ?,
+//             cover_image = ?
+//         WHERE id = ?
+//         `,
+//         [ title, description, coverImage, postId ]
+//     );
+//         res.status(201).json({ message : "successfully updated" });
+// });
 
-//Delete a post
-app.delete('/posts/:postId', async(req, res) => {
-    const postId = req.params.postId;
+// //Delete a post
+// app.delete('/posts/:postId', async(req, res) => {
+//     const postId = req.params.postId;
 
-    await database.query(
-        `DELETE FROM posts
-           WHERE posts.id = ${postId}
-        `
-    );
-    console.log(req);
-    res.status(200).json({ message : "successfully deleted" });
-})
+//     await database.query(
+//         `DELETE FROM posts
+//            WHERE posts.id = ${postId}
+//         `
+//     );
+//     console.log(req);
+//     res.status(200).json({ message : "successfully deleted" });
+// })
 
-//Likes
-app.post('/likes', async(req, res) => {
-    const { userId, postId } = req.body;
+// //Likes
+// app.post('/likes', async(req, res) => {
+//     const { userId, postId } = req.body;
 
-    await database.query(
-        `INSERT INTO likes (
-            users_id,
-            posts_id
-        ) VALUES (?, ?)
-        `, [ userId, postId ]
-    );
-        res.status(201).json({ message : "likeCreated" });
-})
+//     await database.query(
+//         `INSERT INTO likes (
+//             users_id,
+//             posts_id
+//         ) VALUES (?, ?)
+//         `, [ userId, postId ]
+//     );
+//         res.status(201).json({ message : "likeCreated" });
+// })
 
 // start server
 // const start = async () => {
