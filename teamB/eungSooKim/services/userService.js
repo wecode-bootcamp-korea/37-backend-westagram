@@ -12,19 +12,19 @@ const signUp = async (name, email, password, profileImage) => {
     err.statusCode = 409;
     throw err;
   }
-  const createUser = await userDao.createUser(
+  const signUp = await userDao.signUp(
     name,
     email,
     password,
     profileImage
   );
-  return createUser;
+  return signUp;
 };
 
 const userPosts = async (userId) => {
-  const watchUserpost = await userDao.watchUserpost(userId);
+  const userPosts = await userDao.userPosts(userId);
 
-  return watchUserpost;
+  return userPosts;
 };
 
 module.exports = {

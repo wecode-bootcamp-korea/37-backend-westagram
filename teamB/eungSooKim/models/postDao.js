@@ -90,7 +90,7 @@ const delPost = async (postId) => {
       [postId]
     );
   } catch (err) {
-    const error = new Error("INVALID_DATA_INPUT");
+    const error = new Error("존재하지않는글이거나 권한이없습니다");
     error.statusCode = 500;
     throw error;
   }
