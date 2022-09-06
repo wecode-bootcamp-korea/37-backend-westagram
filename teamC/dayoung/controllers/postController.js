@@ -1,5 +1,6 @@
 const postService = require('../services/postService');
 
+// 게시글 등록
 const postInput = async (req, res) => {
   try {
     const { title, content, userId } = req.body;
@@ -19,6 +20,7 @@ const postInput = async (req, res) => {
   }
 };
 
+//게시글 전체 조회
 const postCheck = async (req, res) => {
   try {
     const posts = await postService.postCheck();
@@ -31,7 +33,7 @@ const postCheck = async (req, res) => {
   }
 };
 
-
+// 유저별 게시글 존회
 const postUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -45,6 +47,7 @@ const postUser = async (req, res) => {
   }
 };
 
+// 게시글 수정
 const postEdit = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -59,6 +62,7 @@ const postEdit = async (req, res) => {
   }
 };
 
+// 게시글 삭제
 const postDlt = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -72,6 +76,7 @@ const postDlt = async (req, res) => {
   }
 };
 
+// 게시글 좋아요 등록
 const postLike = async (req, res) => {
   try {
     const postId = req.params.postId;
