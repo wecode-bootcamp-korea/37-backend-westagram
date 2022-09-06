@@ -22,18 +22,40 @@ const postInput = async (title, content, userId) => {
       userId
       );
       const result = {};
-  
-      console.log(DataUserPost[1]);
       result["userId"] = DataUserPost[1][0].id;
       result["userProfileImage"] =DataUserPost[1][0].profile_image;
       result["posting"] = DataUserPost[0];
-      console.log(result);
       return result;
+};
+const postEditCInput = async (postId, content, title) => {
+
+  const DataPostEdit = await postDao.DataPostEdit(
+    postId,
+    content,
+    title
+    );
+    return DataPostEdit;
+
+
+};
+
+const postDltInput = async (postId) => {
+  const DataPostEdit = await postDao.DataPostDlt(
+    postId
+    );
+    return DataPostEdit;
+};
+
+const postLikeInput = async (postId, userId) => {
+  const DataPostEdit = await postDao.DataPostLike(
+    postId, userId
+    );
+    return DataPostEdit;
 };
 
   
   module.exports = {
-    postInput, postCheck, postUserCheck
+    postInput, postCheck, postUserCheck, postEditCInput, postDltInput, postLikeInput
   }
 
  

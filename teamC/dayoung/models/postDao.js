@@ -66,7 +66,42 @@ const DataUserPost = async ( userId ) => {
 	return [postResult, postId];
 };
 
+const DataPostEdit = async ( postId, content, title ) => {
+
+	await myDataSource.query(
+		`UPDATE posts 
+		SET title = ?, content = ? 
+		WHERE id = ${postId};`,
+		[title, content]
+	  );
+	
+	const postResulted = await myDataSource.query(
+		`SELECT *
+		FROM posts
+		WHERE id = ${postId};
+		`);
+
+	return postResulted;
+};
+
+const DataPostDlt = async ( postId) => {
+
+	return await myDataSource.manager.query(
+		`DELETE FROM posts
+		WHERE id = ${postId}`
+	  );
+};
+
+const DataPostLike = async ( postId, userId) => {
+
+	return await myDataSource.query(
+		`INSERT INTO likes(user_id, post_id)
+		values(${userId}, ?);`,
+		[postId]
+	  );
+};
+
 
 module.exports = {
-    createPost, DataPost, DataUserPost
+    createPost, DataPost, DataUserPost, DataPostEdit, DataPostDlt, DataPostLike
 }
