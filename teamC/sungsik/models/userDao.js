@@ -20,12 +20,18 @@ database.initialize()
     })
     
     const checkOverlap = async ( email ) => {
-        return await database.query(
-            `SELECT email FROM users
-             WHERE email = ?
-            `,
-            [ email ]
-        )
+        try {
+            return await database.query(
+                `SELECT email FROM users
+                 WHERE email = ?
+                `,
+                [ email ]
+            )
+        } catch (err) {
+            const error = new Error("INVALID_DATA_INPUT")
+            error.statusCode = 500;
+            throw error;
+        }
     }
 
     const createUser = async (name, email, profileImage, password) => {
