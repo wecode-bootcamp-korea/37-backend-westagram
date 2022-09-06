@@ -18,7 +18,7 @@ database
     console.error("Error during Data Source initialization", err);
   });
 
-const createUser = async (name, email, password, profileImage) => {
+const signUp = async (name, email, password, profileImage) => {
   try {
     return await database.query(
       `INSERT INTO users(
@@ -37,14 +37,14 @@ const createUser = async (name, email, password, profileImage) => {
   }
 };
 
-const watchUserpost = async (userId) => {
+const userPosts = async (userId) => {
   try {
     const result = {};
     const rows = await database.query(
       `SELECT users.id AS userId,
             users.profile_image AS userProfileId
-         FROM users WHERE users.id = ?`
-         ,[userId]
+         FROM users WHERE users.id = ?`,
+      [userId]
     );
     result.userId = rows[0].userId;
     result.userProfileId = rows[0].userProfileId;
@@ -52,8 +52,8 @@ const watchUserpost = async (userId) => {
       `SELECT posts.id AS postingID, 
         posts.profile_image AS postingImageUrl, 
         posts.title AS postingContent FROM posts 
-        WHERE ?  = posts.user_id`
-        ,[userId]
+        WHERE ?  = posts.user_id`,
+      [userId]
     );
     result.postings = postInfo;
     return result;
@@ -64,6 +64,6 @@ const watchUserpost = async (userId) => {
   }
 };
 module.exports = {
-  createUser,
-  watchUserpost,
+  signUp,
+  userPosts,
 };

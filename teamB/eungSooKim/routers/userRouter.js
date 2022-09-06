@@ -8,5 +8,5 @@ router.post("/signup", userControllers.signUp);
 router.get("/posts", userControllers.userPosts);
 
 module.exports = {
-  router
+  router,
 };

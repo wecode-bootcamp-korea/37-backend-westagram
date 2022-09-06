@@ -18,7 +18,7 @@ database
     console.error("Error during Data Source initialization", err);
   });
 
-const titleAndContent = async (title, content, userId) => {
+const writePost = async (title, content, userId) => {
   try {
     return await database.query(
       `INSERT INTO posts(
@@ -36,7 +36,7 @@ const titleAndContent = async (title, content, userId) => {
   }
 };
 
-const allPosts = async () => {
+const postsList = async () => {
   try {
     return await database.query(
       `SELECT posts.user_id AS userId,
@@ -54,28 +54,41 @@ const allPosts = async () => {
   }
 };
 
-const modify = async (title, content, postId) => {
+const modifyPost = async (title, content, postId) => {
   try {
     await database.query(
-          `UPDATE posts
+      `UPDATE posts
          SET title = ?,
              content = ?
          WHERE posts.id= ?
         `,
-    [title, content, postId]
-  
+      [title, content, postId]
     );
     return await database.query(
-          `SELECT users.id AS userId,
+      `SELECT users.id AS userId,
                 users.name AS userName,
                 posts.id AS postingId,
                 posts.title AS postingTitle,
                 posts.content AS postingContent
          FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ?
          `,
-         [postId]
+      [postId]
     );
-    
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 500;
+    throw error;
+  }
+};
+
+const delPost = async (postId) => {
+  try {
+    await database.query(
+      `DELETE FROM posts
+         WHERE posts.id = ?
+         `,
+      [postId]
+    );
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");
     error.statusCode = 500;
@@ -84,7 +97,8 @@ const modify = async (title, content, postId) => {
 };
 
 module.exports = {
-  titleAndContent,
-  allPosts,
-  modify,
+  writePost,
+  postsList,
+  modifyPost,
+  delPost,
 };
