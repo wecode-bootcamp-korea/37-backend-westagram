@@ -1,4 +1,6 @@
-const { emit } = require('nodemon');
+//데이터베이스와 연결, initialize 객체를 호출
+
+
 const { DataSource } = require('typeorm');
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -17,7 +19,8 @@ database
     .catch((err) => {
         console.error('Error occurred during Data Source initialization', err);
         database.destroy();
-    });
+    })
+    .finally(() => console.log("==========================================="));
 
 const createUser = async ( name, email, password, profileImage ) => {
     try {

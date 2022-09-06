@@ -1,4 +1,8 @@
+//실제 로직이 돌아가는 파일
+
 const userDao = require('../models/userDao');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const signUp = async (name, email, password, profileImage) => {
     // password validation using REGEX

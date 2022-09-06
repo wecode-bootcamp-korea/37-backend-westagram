@@ -1,5 +1,6 @@
 //controller/userController.js
 //presentation layer
+//res, req 담당
 
 const userService = require('../services/userService');
 
