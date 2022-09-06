@@ -25,9 +25,9 @@ const titleAndContent = async (title, content, userId) => {
             title,
             content,
             user_id
-        ) VALUES (?, ?, ${userId});
+        ) VALUES (?, ?, ?);
 		`,
-      [title, content]
+      [title, content, userId]
     );
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");
@@ -55,15 +55,14 @@ const allPosts = async () => {
 };
 
 const modify = async (title, content, postId) => {
-  console.log("1111")
   try {
     await database.query(
           `UPDATE posts
          SET title = ?,
              content = ?
-         WHERE posts.id= ${postId}
+         WHERE posts.id= ?
         `,
-    [title, content]
+    [title, content, postId]
   
     );
     return await database.query(
@@ -72,8 +71,10 @@ const modify = async (title, content, postId) => {
                 posts.id AS postingId,
                 posts.title AS postingTitle,
                 posts.content AS postingContent
-         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ${postId}`
-    )
+         FROM users JOIN posts ON posts.user_id = users.id AND posts.id = ?
+         `,
+         [postId]
+    );
     
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");
