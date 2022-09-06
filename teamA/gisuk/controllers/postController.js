@@ -12,8 +12,9 @@ const search = async (req, res) => {
 
 const postUp = async (req, res) => {
     try {
-        const { title, content, userId } = req.body;
-        if ( !title || !content || !userId ) {
+        const { title, content } = req.body;
+        const userId = req.userId;
+        if ( !title || !content ) {
             return res.status(400).json({ message: "KEY_ERROR" });
         }
         await postService.postUp( title, content, userId );

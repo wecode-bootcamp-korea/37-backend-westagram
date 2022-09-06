@@ -2,16 +2,13 @@ const userDao = require("../models/userDao");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
+const KEY = process.env.KEY;
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyNiwiaWF0IjoxNjYyMzgzNDM0fQ.67CK-oTCEQx2kiMHRDm188n-pjrutDDBosW-lagg9I4
-
-//"email": "jjllo@email.com",
-//"password": "Jjjllo123@"
 const makeHash = async (password, saltRound) => {
     return await bcrypt.hash(password, saltRound);
 }
 const checkHash = async (password, hashedPassword) => {
-    return await bcrypt.compare(password, hashedPassword) // (1)
+    return await bcrypt.compare(password, hashedPassword)
 }
 
 const userPost = async ( userId ) => {
@@ -33,7 +30,7 @@ const signIn = async ( email, password ) => {
     const userId = {
         user_id : user.id
     }
-    const jwtToken = jwt.sign(userId, "secretKey");
+    const jwtToken = jwt.sign(userId, KEY);
     return jwtToken
 }
 
@@ -46,7 +43,6 @@ const signUp = async ( name, email, password, profileImage ) => {
         err.statusCode = 400;
         throw err;
     }
-
     const hashPassword = await makeHash(password,12);
 
     const createUser = await userDao.createUser(

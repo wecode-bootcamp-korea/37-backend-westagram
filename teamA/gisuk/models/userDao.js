@@ -1,14 +1,5 @@
 const appDataSource = require("../orm");
 
-appDataSource.initialize()
-    .then(() => {
-      console.log("Data Source has been initialized!")
-    })
-    .catch((err) => {
-      console.error("Error during Data Source initialization", err)
-      appDataSource.destroy()
-    })
-
 const userPost = async ( userId ) => {
     try {
         const [user] = await appDataSource.query(
