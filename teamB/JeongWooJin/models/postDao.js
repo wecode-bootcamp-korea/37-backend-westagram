@@ -1,0 +1,77 @@
+const { DataSource, TypeORMError } = require('typeorm');
+
+const appDataSource = new DataSource({
+  type: process.env.TYPEORM_CONNECTION,
+  host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE
+})
+
+appDataSource.initialize()
+  .then(() => {
+      console.log("Data Source has been initialized!")
+  })
+  .catch((err) => {
+      console.error("Error during Data Source initialization", err)
+  appDataSource.destroy()
+  });
+
+  const createPost = async (title, content, user_id ) => {
+
+    await appDataSource.query(
+      `INSERT INTO posts(
+        title,
+        content,
+        user_id
+      ) VALUES (?, ?, ?);
+      `,
+      [ title, content, user_id ]
+    );
+  }
+
+  const lookUpPost = async () => {
+
+    try{
+      return await appDataSource.query(
+      `SELECT
+      posts.id, posts.title, posts.user_id, posts.content, users.id, users.profile_image
+      FROM posts, users
+      WHERE posts.user_id = users.id;`,
+    );
+      } catch (err) {
+       const error = new Error(`INVALID_DATA_INPUT`);
+       error.statusCode = 500;
+       throw error;
+      }
+  }
+
+  const modifyPost = async (postId, content) => {
+
+    try{
+      await appDataSource.query(
+        `UPDATE posts
+        SET content = ?
+        WHERE id = ${postId};`,
+        [content]
+        )
+      
+       const result = await appDataSource.query(
+        `SELECT *
+        FROM posts
+        WHERE id = ${postId};`)
+        return [result];
+
+      } catch (err) {
+       const error = new Error(`INVALID_DATA_INPUT`);
+       error.statusCode = 500;
+       throw error;
+      }
+  }
+
+
+
+module.exports = {
+  createPost, lookUpPost, modifyPost
+}

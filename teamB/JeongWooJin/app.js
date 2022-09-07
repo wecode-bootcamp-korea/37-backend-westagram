@@ -3,7 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const { DataSource, TypeORMError } = require('typeorm');
+const { DataSource } = require('typeorm');
+const route = require('./routes')
 
 const app = express();
 const PORT = process.env.PORT
@@ -29,105 +30,79 @@ appDataSource.initialize()
   app.use(cors());
   app.use(morgan('dev'));
   app.use(express.json());
-
-  
+  app.use(route);
   app.get("/ping", (req,res) => {
     res.status(200).json({"message" : "pong"});
   })
 
  //assignment 2 유저회원가입
-  app.post("/users", async (req, res, next) => {
-    const { name, email, profile_image, password } = req.body;
+  // app.post("/users", async (req, res, next) => {
+  //   const { name, email, profile_image, password } = req.body;
 
-  await appDataSource.query(
-    `INSERT INTO users(
-      name,
-      email,
-      profile_image,
-      password
-    ) VALUES (?, ?, ?, ?);
-    `,
-    [ name, email, profile_image, password ]
-  );
+  // await appDataSource.query(
+  //   `INSERT INTO users(
+  //     name,
+  //     email,
+  //     profile_image,
+  //     password
+  //   ) VALUES (?, ?, ?, ?);
+  //   `,
+  //   [ name, email, profile_image, password ]
+  // );
 
-      res.status(201).json({ "message" : "userCreated"});
-  })
+  //     res.status(201).json({ "message" : "userCreated"});
+  // })
 
-//assignment 3 게시글 등록하기
-  app.post("/posts", async (req, res, next) => {
-    const { title, content, user_id } = req.body;
+// //assignment 3 게시글 등록하기
+//   app.post("/posts", async (req, res, next) => {
+//     const { title, content, user_id } = req.body;
 
-  await appDataSource.query(
-    `INSERT INTO posts(
-      title,
-      content,
-      user_id
-    ) VALUES (?, ?, ?);
-    `,
-    [ title, content, user_id ]
-  );
+//   await appDataSource.query(
+//     `INSERT INTO posts(
+//       title,
+//       content,
+//       user_id
+//     ) VALUES (?, ?, ?);
+//     `,
+//     [ title, content, user_id ]
+//   );
 
-      res.status(201).json({ "message" : "postCreated"});
-  })
+//       res.status(201).json({ "message" : "postCreated"});
+//   })
 
 //assignment 4 전체 게시글 조회하기
-app.get('/lookup', async(req, res) => {
-  await appDataSource.manager.query(
-    `SELECT
-        posts.id, posts.title, posts.user_id, posts.content, users.id, users.profile_image
-        FROM posts, users
-        WHERE posts.user_id = users.id;`
-    ,(err, rows) => {
-            res.status(200).json({"data":rows});
-    })
-});
-
-//assignment 5 유저의 게시글 조회하기_콜백함수
-// app.get('/userinfo/:user_id', async(req, res) => {
-//   const userId = req.params.user_id;
-//   const result = {};
-//   const post_list = []; 
+// app.get('/lookup', async(req, res) => {
 //   await appDataSource.manager.query(
 //     `SELECT
-//         posts.id as post_id, posts.title, posts.user_id, posts.content, users.profile_image
+//         posts.id, posts.title, posts.user_id, posts.content, users.id, users.profile_image
 //         FROM posts, users
-//         WHERE posts.user_id = users.id and posts.user_id = ${userId};`
+//         WHERE posts.user_id = users.id;`
 //     ,(err, rows) => {
-//             result["userId"] = rows[0].user_id;
-//             result["userProfileImage"] = rows[0].profile_image;
-//             rows.map (el => {
-//               let tmp = {};
-//               tmp.postId = el.post_id;
-//               tmp.title = el.title;
-//               tmp.content = el.content;
-//               post_list.push(tmp);
-//             })
-//             result.postings = post_list;
-//             res.status(200).json({"data":result});
+//             res.status(200).json({"data":rows});
 //     })
 // });
 
 //assignment 5 유저의 게시글 조회하기_쿼리문2개
-app.get('/userinfo/:user_id', async(req, res) => {
-  const userId = req.params.user_id;
-  const user = await appDataSource.manager.query(
-    `SELECT
-        users.id as userId,
-        users.profile_image as userProfileImage
-        FROM users 
-        WHERE users.id = ${userId};`)
-  const post = await appDataSource.manager.query(
-    `SELECT
-        posts.id as poststingId,
-        posts.content as postingContent
-        FROM posts 
-        WHERE user_id = ${userId}`)
+// app.get('/userinfo/:user_id', async(req, res) => {
+//   const userId = req.params.user_id;
+//   const user = await appDataSource.manager.query(
+//     `SELECT
+//         users.id as userId,
+//         users.profile_image as userProfileImage
+//         FROM users 
+//         WHERE users.id = ${userId};`)
+//   const post = await appDataSource.manager.query(
+//     `SELECT
+//         posts.id as poststingId,
+//         posts.content as postingContent
+//         FROM posts 
+//         WHERE user_id = ${userId}`)
 
-      user[0].postsings = post;
-      res.status(200).json({"data":user[0]});
-  });
+//       user[0].postsings = post;
+//       res.status(200).json({"data":user[0]});
+//   });
 
-//assignment 6 게시글 수정하기
+// //assignment 6 게시글 수정하기
 app.patch('/modifypost/:post_id', async(req, res) => {
   const postId = req.params.post_id;
   const {content}  = req.body
@@ -145,51 +120,31 @@ app.patch('/modifypost/:post_id', async(req, res) => {
   
 })
 
-//assignment 6 게시글 수정하기 콜백함수
-// app.patch('/modifypost/:post_id', async(req, res) => {
+// //assignment 7 게시글 삭제하기
+// app.delete('/deletepost/:post_id', async(req, res, next) => {
 //   const postId = req.params.post_id;
-//   const {content}  = req.body
-//   await appDataSource.manager.query(`
-//   UPDATE posts
-//     SET content = ?
-//     WHERE id = ${postId};`,
-//     [content]
-//   );
-//   await appDataSource.manager.query(`
-//     SELECT *
-//     FROM posts
-//     WHERE id = ${postId};`,
-//     (err, rows) => {
-//       let result = rows[0]
-//     res.status(201).json({"data":result});
-//     })
-//  })
+//     await appDataSource.query(
+//       `DELETE FROM posts
+//       WHERE posts.id = ${postId}`,
+//     );
+//       res.status(200).json({"message" : "postingDeleted"});
+// });
 
-//assignment 7 게시글 삭제하기
-app.delete('/deletepost/:post_id', async(req, res, next) => {
-  const postId = req.params.post_id;
-    await appDataSource.query(
-      `DELETE FROM posts
-      WHERE posts.id = ${postId}`,
-    );
-      res.status(200).json({"message" : "postingDeleted"});
-});
+// //assignment 8 좋아요 누르기
+// app.post("/likes", async (req, res) => {
+//   const { user_id, post_id } = req.body;
+//   console.log(user_id, post_id)
+// await appDataSource.query(
+//   `INSERT INTO likes(
+//     user_id,
+//     post_id
+//   ) VALUES (?, ?);
+//   `,
+//   [ user_id, post_id ]
+// );
 
-//assignment 8 좋아요 누르기
-app.post("/likes", async (req, res) => {
-  const { user_id, post_id } = req.body;
-  console.log(user_id, post_id)
-await appDataSource.query(
-  `INSERT INTO likes(
-    user_id,
-    post_id
-  ) VALUES (?, ?);
-  `,
-  [ user_id, post_id ]
-);
-
-    res.status(201).json({ "message" : "likeCreated"});
-})
+//     res.status(201).json({ "message" : "likeCreated"});
+// })
 
   const start = async () => {
     try {
