@@ -1,4 +1,4 @@
-const likeDao  = require("../models/likeDao");
+const { likeDao }  = require("../models/");
 
 const heart = async ( userId, postId ) => {
     const heart = await likeDao.pushHeart(

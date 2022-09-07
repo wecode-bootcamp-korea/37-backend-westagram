@@ -1,4 +1,4 @@
-const postService  = require('../services/postService');
+const { postService }  = require('../services/');
 
 const upload = async (req, res) => {
     try {
