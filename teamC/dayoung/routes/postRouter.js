@@ -4,12 +4,12 @@ const postController = require('../controllers/postController');
 
 const router = express.Router();
 
-router.post('/enroll', postController.postInput);
-router.get('/lookup', postController.postCheck);
+router.post('/enroll', postController.inputPost);
+router.get('/lookup', postController.checkPost);
 router.get('/:userId', postController.postUser);
-router.patch('/:postId', postController.postEdit);
-router.delete('/:postId', postController.postDlt);
-router.post('/likes/:postId', postController.postLike);
+router.patch('/:postId', postController.editPost);
+router.delete('/:postId', postController.dltPost);
+router.post('/likes/:postId', postController.likePost);
 
 module.exports = {
 	router

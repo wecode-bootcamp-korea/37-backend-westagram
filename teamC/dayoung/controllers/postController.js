@@ -1,7 +1,7 @@
 const postService = require('../services/postService');
 
 // 게시글 등록
-const postInput = async (req, res) => {
+const inputPost = async (req, res) => {
   try {
     const { title, content, userId } = req.body;
 
@@ -9,7 +9,7 @@ const postInput = async (req, res) => {
       return res.status(400).json({ message: 'KEY_ERROR' });
     }
 
-    await postService.postInput( title, content, userId);
+    await postService.inputPost( title, content, userId);
     return res.status(201).json({
       message: 'postInput_SUCCESS',
     });
@@ -21,9 +21,9 @@ const postInput = async (req, res) => {
 };
 
 //게시글 전체 조회
-const postCheck = async (req, res) => {
+const checkPost = async (req, res) => {
   try {
-    const posts = await postService.postCheck();
+    const posts = await postService.checkPost();
     return res.status(201).json({
       Data: posts
     });
@@ -37,7 +37,7 @@ const postCheck = async (req, res) => {
 const postUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const result = await postService.postUserCheck(userId);
+    const result = await postService.postUser(userId);
     return res.status(201).json({
       Data : result
     });
@@ -48,11 +48,11 @@ const postUser = async (req, res) => {
 };
 
 // 게시글 수정
-const postEdit = async (req, res) => {
+const editPost = async (req, res) => {
   try {
     const postId = req.params.postId;
     const { title, content } = req.body;
-    const result = await postService.postEditCInput(postId, title, content);
+    const result = await postService.inputPostEdit(postId, title, content);
     return res.status(201).json({
       Data : result
     });
@@ -63,10 +63,10 @@ const postEdit = async (req, res) => {
 };
 
 // 게시글 삭제
-const postDlt = async (req, res) => {
+const dltPost = async (req, res) => {
   try {
     const postId = req.params.postId;
-    await postService.postDltInput(postId);
+    await postService.inputPostDlt(postId);
     return res.status(201).json({
       message : "postingDeleted"
     });
@@ -77,11 +77,11 @@ const postDlt = async (req, res) => {
 };
 
 // 게시글 좋아요 등록
-const postLike = async (req, res) => {
+const likePost = async (req, res) => {
   try {
     const postId = req.params.postId;
     const { userId } = req.body;
-    await postService.postLikeInput(postId, userId);
+    await postService.inputPostLike(postId, userId);
     return res.status(201).json({
       message : "likedUpdated"
     });
@@ -91,5 +91,5 @@ const postLike = async (req, res) => {
   }
 };
 module.exports = {
-	postInput, postCheck, postUser, postEdit, postDlt, postLike
+  inputPost, checkPost, postUser, editPost, dltPost, likePost
 }

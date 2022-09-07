@@ -1,23 +1,23 @@
 const postDao = require('../models/postDao')
 
-const postInput = async ( title, content, userId ) => {
+const inputPost = async ( title, content, userId ) => {
   const createPost = await postDao.createPost( title, content, userId );
 
   return createPost;
 
  };
 
- const postCheck = async () => {
+ const checkPost = async () => {
 
-  const DataPost = await postDao.DataPost();
+  const DataPost = await postDao.getPostList();
 
   return DataPost;
 
   };
 
-  const postUserCheck = async ( userId ) => {
+  const CheckpostUser = async ( userId ) => {
 
-    const DataUserPost = await postDao.DataUserPost( userId );
+    const DataUserPost = await postDao.getUserPost( userId );
     const result = {};
     result["userId"] = DataUserPost[1][0].id;
     result["userProfileImage"] =DataUserPost[1][0].profile_image;
@@ -26,33 +26,31 @@ const postInput = async ( title, content, userId ) => {
     return result;
 
 };
-const postEditCInput = async ( postId, content, title ) => {
+const inputPostEdit = async ( postId, content, title ) => {
 
-  const DataPostEdit = await postDao.DataPostEdit( postId, content, title );
+  const DataPostEdit = await postDao.getPostEdit( postId, content, title );
 
   return DataPostEdit;
 
 
 };
 
-const postDltInput = async ( postId ) => {
+const inputPostDlt = async ( postId ) => {
 
-  const DataPostEdit = await postDao.DataPostDlt(
-    postId
-    );
+  const DataPostEdit = await postDao.getPostDlt( postId );
     return DataPostEdit;
 };
 
-const postLikeInput = async ( postId, userId ) => {
+const inputPostLike = async ( postId, userId ) => {
 
-  const DataPostEdit = await postDao.DataPostLike(postId, userId);
+  const DataPostEdit = await postDao.getPostLike(postId, userId);
 
   return DataPostEdit;
 };
 
   
   module.exports = {
-    postInput, postCheck, postUserCheck, postEditCInput, postDltInput, postLikeInput
+    inputPost, checkPost, CheckpostUser, inputPostDlt, inputPostDlt, inputPostLike
   }
 
  
