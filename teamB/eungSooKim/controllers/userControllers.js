@@ -22,7 +22,7 @@ const userPosts = async (req, res) => {
   try {
     const { userId } = req.body;
     if (!userId) {
-      return res.status(400).json({ message: "유저id를입력하세요" });
+      return res.status(400).json({ message: "KEY_ERROR" });
     }
     let result = await userService.userPosts(userId);
     return await res.status(200).json(result);
