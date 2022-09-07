@@ -1,11 +1,9 @@
 const express = require("express");
-const asyncWrap = require('../errorHandler/asyncWrap')
+const { asyncWrap } = require('../errorHandler/asyncWrap')
 const userController = require("../controllers/userController");
 
-const router = express.Router();
+const userRouter = express.Router();
 
-router.post('/signup', asyncWrap.asyncWrap(userController.signUp));
+userRouter.post('/signup', asyncWrap(userController.signUp));
 
-module.exports = {
-    router
-}
+module.exports = { userRouter };

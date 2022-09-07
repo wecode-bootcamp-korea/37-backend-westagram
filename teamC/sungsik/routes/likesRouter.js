@@ -1,12 +1,10 @@
 const express = require('express')
-const asyncWrap = require('../errorHandler/asyncWrap')
+const { asyncWrap } = require('../errorHandler/asyncWrap')
 const likesController = require('../controllers/likesController')
 
-const router = express.Router();
+const likesRouter = express.Router();
 
-router.post('/:userId/:postId', asyncWrap.asyncWrap(likesController.likePost));
-router.delete('/:userId/:postId', asyncWrap.asyncWrap(likesController.deleteLikes))
+likesRouter.post('/:userId/:postId', asyncWrap(likesController.likePost));
+likesRouter.delete('/:userId/:postId', asyncWrap(likesController.deleteLikes))
 
-module.exports = {
-    router
-}
+module.exports = { likesRouter }
