@@ -26,15 +26,14 @@ const list = async (req, res) => {
     }
 }
 
-const edit = async (req, res) => {
+const update = async (req, res) => {
     try {
-        const postId = req.params.postId;
-        const { title, description, cover_image, users_id } = req.body;
+        const { title, description, cover_image, users_id, postId } = req.body;
 
-        if ( !postId || !title || !description || !cover_image || !users_id ) {
+        if ( !postId || !title || !description || !cover_image || !users_id ||!postId ) {
             return res.status(400).json({ message: "KEY_ERROR" });
         }
-        const post = await postService.edit( postId, title, description, cover_image, users_id );
+        const post = await postService.update( postId, title, description, cover_image, users_id, postId );
         return res.status(201).json({ result: post });
     } 
     catch (err) {
@@ -44,7 +43,7 @@ const edit = async (req, res) => {
 
 const erase = async (req, res) => {
     try {
-        const postId = req.params.postId;
+        const { postId } = req.body;
         if ( !postId ) {
             return res.status(400).json({ message: "KEY_ERROR "});
         }
@@ -59,6 +58,6 @@ const erase = async (req, res) => {
 module.exports = {
     upload,
     list,
-    edit,
+    update,
     erase,
 }

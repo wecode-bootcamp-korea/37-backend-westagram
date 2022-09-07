@@ -20,7 +20,7 @@ database
     })
     .finally(() => console.log("==========================================="));
 
-const pushHeart = async ( userId, postId ) => {
+const createLike = async ( userId, postId ) => {
     try {
         return await database.query(
             `INSERT INTO likes(
@@ -32,12 +32,12 @@ const pushHeart = async ( userId, postId ) => {
         );
     } catch (err) {
         const error = new Error(`INVALID_DATA_INPUT`);
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 }
 
 
 module.exports = {
-    pushHeart
+    createLike
 }

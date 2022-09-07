@@ -24,7 +24,7 @@ const signUp = async (req, res) => {
 
 const postList = async (req, res) => {
     try {
-        let userId = req.params.userId;
+        let { userId } = req.body;
 
         if ( !userId ) {
             return res.status(400).json({ message: "KEY_ERROR" });

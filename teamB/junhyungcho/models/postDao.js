@@ -38,7 +38,7 @@ const createPost = async (title, description, cover_image, users_id) => {
     }
     catch (err) {
         const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 };
@@ -51,12 +51,12 @@ const getAllPost = async () => {
     }
     catch (err) {
         const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     };
 };
 
-const editPost = async ( postId, title, description, cover_image, users_id ) => {
+const updatePost = async ( postId, title, description, cover_image, users_id ) => {
     try {
         await database.query(
             `UPDATE posts 
@@ -64,8 +64,8 @@ const editPost = async ( postId, title, description, cover_image, users_id ) => 
                 description = ?,
                 cover_image = ?,
                 users_id = ?
-            WHERE id = ${postId}`,
-            [ title, description, cover_image, users_id ]
+            WHERE id = ?`,
+            [ title, description, cover_image, users_id, postId ]
         );
 
         return await database.query(
@@ -76,11 +76,12 @@ const editPost = async ( postId, title, description, cover_image, users_id ) => 
                 p.title as postingTitle,
                 p.description as postingContent
             FROM posts p
-            WHERE p.id like ${postId};`
+            WHERE p.id like ?;`,
+            [ postId ]
         );
     } catch (err) {
         const error = new Error(`INVALID_DATA_INPUT`);
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 }
@@ -89,12 +90,13 @@ const deletePost = async ( postId ) => {
     try {
         return await database.query(
         `DELETE FROM posts
-        WHERE posts.id = ${postId};`
+        WHERE posts.id = ?;`,
+        [ postId ]
         )
     }
     catch (err) {
         const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 }
@@ -102,6 +104,6 @@ const deletePost = async ( postId ) => {
 module.exports = {
     createPost,
     getAllPost,
-    editPost,
+    updatePost,
     deletePost,
 }

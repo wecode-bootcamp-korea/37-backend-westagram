@@ -41,7 +41,7 @@ const createUser = async (first_name, last_name, age, email, password, profile_i
     
     catch (err) {
         const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 };
@@ -69,7 +69,7 @@ const getAllInfo = async (userId) => {
 
     catch (err) {
         const error = new Error('INBALID_DATA_INPUT');
-        error.statusCode = 500;
+        error.statusCode = 400;
         throw error;
     }
 }

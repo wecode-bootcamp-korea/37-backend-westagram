@@ -14,16 +14,16 @@ const upload = async ( title, description, cover_image, users_id ) => {
 
 const list = async () => await postDao.getAllPost();
 
-const edit = async ( postId, title, description, cover_image, users_id ) => {
-    const edit = await postDao.editPost(
+const update = async ( postId, title, description, cover_image, users_id ) => {
+    const edit = await postDao.updatePost(
         postId,
         title,
         description,
         cover_image,
-        users_id
+        users_id,
     );
 
-    return edit
+    return update
 }
 
 const erase = async ( postId ) => {
@@ -33,6 +33,6 @@ const erase = async ( postId ) => {
 module.exports = {
     upload,
     list,
-    edit,
+    update,
     erase,
 }

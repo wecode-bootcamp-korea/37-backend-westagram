@@ -25,7 +25,7 @@ const start = async () => {
     try {
         server.listen(PORT, () => console.log(`Server is listening on ${PORT}`));
     } catch (err) {
-        throw err;
+        consloe.log(err);
     } finally {
         console.log('===========================================');
     }
