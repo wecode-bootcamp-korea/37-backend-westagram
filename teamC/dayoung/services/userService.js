@@ -1,4 +1,7 @@
+const bcrypt = require("bcrypt");
+
 const userDao = require('../models/userDao')
+
 
 const signUp = async (name, email, password, profileImage) => {
     // password validation using REGEX
@@ -11,7 +14,18 @@ const signUp = async (name, email, password, profileImage) => {
       err.statusCode = 409;
       throw err;
     }
-    const createUser = await userDao.createUser( name, email, password, profileImage );
+
+    const saltRounds = 10;
+
+    // bcrypt 함수 선언!
+    const makeHash = async (password, saltRounds) => {
+      return await bcrypt.hash(password, saltRounds);
+    }
+
+    //bcrypt 함수 실행!
+    const hashPassword = await makeHash(password,saltRounds);
+
+    const createUser = await userDao.createUser( name, email, hashPassword, profileImage );
       
     return createUser;
 };
