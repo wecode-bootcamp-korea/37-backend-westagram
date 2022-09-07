@@ -16,12 +16,16 @@ const postLookup = async () => {
       };
 
 const modifyPost = async (postId, content) => {
-  const postModify = await postDao.postModify(postId, content);
-  console.log(postModify)
+  const postModify = await postDao.modifyPost(postId, content);
   return postModify;
   };
 
+const deletePost = async (postId) => {
+  const postDelete = await postDao.deletePost(postId);
+  return postDelete;
+  };
+  
 
   module.exports = {
-      enrollPost, postLookup, modifyPost
+      enrollPost, postLookup, modifyPost, deletePost
   }

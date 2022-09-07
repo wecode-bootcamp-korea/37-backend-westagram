@@ -19,8 +19,8 @@ appDataSource.initialize()
   });
 
   const createPost = async (title, content, user_id ) => {
-
-    await appDataSource.query(
+    try{
+    return await appDataSource.query(
       `INSERT INTO posts(
         title,
         content,
@@ -29,6 +29,11 @@ appDataSource.initialize()
       `,
       [ title, content, user_id ]
     );
+  } catch (err) {
+    const error = new Error(`INVALID_DATA_INPUT`);
+    error.statusCode = 500;
+    throw error;
+   }
   }
 
   const lookUpPost = async () => {
@@ -70,8 +75,20 @@ appDataSource.initialize()
       }
   }
 
+  const deletePost = async (postId) => {
 
+    try{
+      await appDataSource.query(
+        `DELETE FROM posts
+      WHERE posts.id = ${postId}`
+        )
+      } catch (err) {
+       const error = new Error(`INVALID_DATA_INPUT`);
+       error.statusCode = 500;
+       throw error;
+      }
+  }
 
 module.exports = {
-  createPost, lookUpPost, modifyPost
+  createPost, lookUpPost, modifyPost, deletePost
 }

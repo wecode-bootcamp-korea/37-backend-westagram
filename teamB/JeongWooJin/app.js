@@ -103,22 +103,22 @@ appDataSource.initialize()
 //   });
 
 // //assignment 6 게시글 수정하기
-app.patch('/modifypost/:post_id', async(req, res) => {
-  const postId = req.params.post_id;
-  const {content}  = req.body
-  await appDataSource.manager.query(`
-  UPDATE posts
-    SET content = ?
-    WHERE id = ${postId};`,
-    [content]
-  );
-  const result = await appDataSource.manager.query(`
-    SELECT *
-    FROM posts
-    WHERE id = ${postId};`)
-    res.status(201).json({"data":result[0]});
+// app.patch('/modifypost/:post_id', async(req, res) => {
+//   const postId = req.params.post_id;
+//   const {content}  = req.body
+//   await appDataSource.manager.query(`
+//   UPDATE posts
+//     SET content = ?
+//     WHERE id = ${postId};`,
+//     [content]
+//   );
+//   const result = await appDataSource.manager.query(`
+//     SELECT *
+//     FROM posts
+//     WHERE id = ${postId};`)
+//     res.status(201).json({"data":result[0]});
   
-})
+// })
 
 // //assignment 7 게시글 삭제하기
 // app.delete('/deletepost/:post_id', async(req, res, next) => {
@@ -133,7 +133,6 @@ app.patch('/modifypost/:post_id', async(req, res) => {
 // //assignment 8 좋아요 누르기
 // app.post("/likes", async (req, res) => {
 //   const { user_id, post_id } = req.body;
-//   console.log(user_id, post_id)
 // await appDataSource.query(
 //   `INSERT INTO likes(
 //     user_id,
@@ -143,8 +142,8 @@ app.patch('/modifypost/:post_id', async(req, res) => {
 //   [ user_id, post_id ]
 // );
 
-//     res.status(201).json({ "message" : "likeCreated"});
-// })
+    res.status(201).json({ "message" : "likeCreated"});
+})
 
   const start = async () => {
     try {
