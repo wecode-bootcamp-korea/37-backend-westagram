@@ -18,18 +18,15 @@ myDataSource.initialize()
 	  myDataSource.destroy();
   });
 
-const createUser = async ( name, email, password, profileImage ) => {
+const createUser = async ( email, password ) => {
 	try {
-    console.log(name, email, password, profileImage)
 		return await myDataSource.query(
 		`INSERT INTO users(
-		    name,
 		    email,
-		    password,
-		    profile_image
-		) VALUES (?, ?, ?, ?);
+		    password
+		) VALUES (?, ?);
 		`,
-		[ name, email, password, profileImage ]
+		[ email, password ]
 
 	  );
 	} catch (err) {
