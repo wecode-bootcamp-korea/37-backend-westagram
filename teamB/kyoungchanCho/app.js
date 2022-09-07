@@ -9,6 +9,7 @@ const route = require("./routes");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
 const { DataSource } =require('typeorm');
+const { response } = require('express');
 
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -35,26 +36,25 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan('dev'));
 app.use(route);
+
 // app.get("/ping", (req, res) => {
 //     res.json({ message : "pong"})
 // })
 
 // app.post("/users/signup", async (req, res, next) => {
-//     const { name, email, profileImage, password } = req.body
-    
-//     let hashedPassword;
-//     const saltRounds = 12;
+//     const { name, email, profileImage, password } = req.body    
 
+//     const saltRounds = 12;
 //     const makeHash = async (password, saltRounds) => {
 //         return await bcrypt.hash(password, saltRounds);
 //     }
 
 //     const main = async () => {
 //         const hashedPassword = await makeHash(password, saltRounds);
-//         return await bcrypt.has(password,saltRounds);
+//         return await bcrypt.hash(password,saltRounds);
 //     }
 
-//     hashedPassword = await makeHash(password,saltRounds);
+//     const hashedPassword = await makeHash(password,saltRounds);
 
 //     await database.query(    
 //         `INSERT INTO users(
@@ -68,6 +68,32 @@ app.use(route);
 //     );
 //     res.status(201).json({ message : "userCreated" })
 // })
+
+// app.post('/users/signin', async (req, res) => {
+//     const { email, password } = req.body;
+
+//     const [user] = await database.query(
+        // `SELECT
+        //     id,
+        //     email,
+        //     password
+        // FROM users
+        // WHERE email = ?
+        // `,
+//        [email]
+//    );
+//     console.log(user)
+//     const checkHash = async (password, hashedPassword) => {
+//         return await bcrypt.compare(password, hashedPassword)
+//     }
+//     const isVerified = await checkHash(password, user.password);
+//     console.log(isVerified)
+
+//     const token = jwt.sign({ user_id: user.id }, process.env.SECRETKEY);
+    
+//     response.status(200).json({ result : token })
+// });
+
 
 // app.post("/posts", async (req, res, next) => {
 //     const { title, content, userId } = req.body

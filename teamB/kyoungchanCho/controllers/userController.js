@@ -8,6 +8,20 @@ const signUp = async (req, res) => {
     return res.status(201).json({ result : user });
 };
 
+const signIn = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await userService.signIn(email, password)
+    console.log(user)
+    return res.status(200).json({ token : user})
+}
+
+const getPostsByUser = async (req, res) => {
+    const posts = await userService.getPostsByUser()
+    return res.status(200).json({ data : posts})
+}
+
 module.exports = {
     signUp,
+    signIn,
+    getPostsByUser,
 }

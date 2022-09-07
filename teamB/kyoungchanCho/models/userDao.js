@@ -1,5 +1,3 @@
-//typeORM CRUD
-const express = require('express')
 const { DataSource } =require('typeorm');
 
 const database = new DataSource({
@@ -33,6 +31,22 @@ const createUser = async (name, email, profileImage, password) => {
     return user;
 };
 
+const exportUser = async (email, password) => {
+    const [userEncryption] = await database.query(
+        `SELECT
+            id,
+            email,
+            password
+        FROM users
+        WHERE email = ?
+        `,
+        [email]
+    );
+//    console.log(userEncryption)
+    return userEncryption;
+}
+
 module.exports = {
     createUser,
+    exportUser,
 }
