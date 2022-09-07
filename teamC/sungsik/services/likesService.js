@@ -14,8 +14,8 @@ const likePost = async (userId, postId) => {
     const likeThisPosting = await likesDao.likeThisPosting( userId, postId )
 }
 
-const deleteLikes = async () => {
-    const deleteThisPosting = await likesDao.deleteThisPosting()
+const deleteLikes = async (userId, postId) => {
+    const deleteThisPosting = await likesDao.deleteThisPosting(userId, postId)
 
     return deleteThisPosting
 }
