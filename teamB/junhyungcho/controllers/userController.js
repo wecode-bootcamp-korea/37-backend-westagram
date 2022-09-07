@@ -1,6 +1,3 @@
-//controller/userController.js
-//presentation layer
-//res, req 담당
 const { userService } = require('../services');
 
 const signUp = async (req, res) => {
@@ -39,26 +36,7 @@ const postList = async (req, res) => {
     }
 }
 
-const signIn = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if ( !email || !password ) {
-            return res.status(400).json({ message: "KEY_ERROR" });
-        }
-
-        const signIn = await userService.signIn(email, password);
-
-        return res.status(200).json({ message: signIn });
-
-    }
-    catch (err) {
-        return res.status(err.statusCode || 500).json({ message: err.message });
-    }
-}
-
 module.exports = {
     signUp,
     postList,
-    signIn
 }

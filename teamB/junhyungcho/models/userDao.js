@@ -1,6 +1,5 @@
-//데이터베이스와 연결, initialize 객체를 호출
-
 const { DataSource } = require('typeorm');
+
 const database = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
     host: process.env.TYPEORM_HOST,
@@ -75,13 +74,8 @@ const getUserPosting = async (userId) => {
     );
 }
 
-
-
-// const getUserSignIn = async ()
-
 module.exports = {
     createUser,
     getUserIdImage,
     getUserPosting,
-    // getUserSignIn
 }
