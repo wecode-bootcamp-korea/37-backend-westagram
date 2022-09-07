@@ -10,7 +10,7 @@ const writePost = async (req, res) => {
 
     await postService.writePost(title, content, userId);
     return res.status(201).json({
-      message: "게시되었습니다",
+      message: "postingCreated",
     });
   } catch (err) {
     console.log(err);
