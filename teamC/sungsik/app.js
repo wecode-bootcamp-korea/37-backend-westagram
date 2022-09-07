@@ -12,6 +12,7 @@ const morgan = require("morgan");
 const routes = require('./routes')
 const asyncWrap = require('./errorHandler/asyncWrap')
 
+
 app.use(express.json());
 app.use(cors());
 app.use(morgan("combined"));

@@ -1,6 +1,7 @@
 const userDao = require("../models/userDao");
 
 const signUp = async (name, email, profileImage, password) => {
+
     const checkOverlap = await userDao.checkOverlap(email);
 
     const pwValidation = new RegExp(
@@ -18,13 +19,13 @@ const signUp = async (name, email, profileImage, password) => {
         err.statusCode = 400;
         throw err;
     }
-    
+
     if (checkOverlap.length !== 0) {
         const err = new Error("USER_OVERLAPED");
         err.statusCode = 400;
         throw err;
     }
-    
+
     const createUser = await userDao.createUser(
         name,
         email,

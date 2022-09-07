@@ -1,6 +1,7 @@
 const userService = require("../services/userService");
 
 const signUp = async (req, res) => {
+
     const { name, email, profileImage, password } = req.body;
 
     if ( !name || !email || !profileImage || !password ) {
