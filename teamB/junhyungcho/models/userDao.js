@@ -46,7 +46,7 @@ const createUser = async (first_name, last_name, age, email, password, profile_i
     }
 };
 
-const getAllInfo = async (userId) => {
+const getUserIdImage = async (userId) => {
     try {
         const [ user ] = await database.query(
             `SELECT
@@ -55,15 +55,6 @@ const getAllInfo = async (userId) => {
             FROM users WHERE users.id = ?`
             ,[userId]
         );
-        
-        user.postings = await database.query(
-            `SELECT 
-                posts.id AS postingId, 
-                posts.cover_image AS postingImageUrl, 
-                posts.description AS postingContent
-            FROM posts WHERE ${userId} = users_id`
-        );
-
         return user;
     }
 
@@ -74,7 +65,23 @@ const getAllInfo = async (userId) => {
     }
 }
 
+const getUserPosting = async (userId) => {
+    return await database.query(
+        `SELECT 
+            posts.id AS postingId, 
+            posts.cover_image AS postingImageUrl, 
+            posts.description AS postingContent
+        FROM posts WHERE ${userId} = users_id`
+    );
+}
+
+
+
+// const getUserSignIn = async ()
+
 module.exports = {
     createUser,
-    getAllInfo
+    getUserIdImage,
+    getUserPosting,
+    // getUserSignIn
 }
