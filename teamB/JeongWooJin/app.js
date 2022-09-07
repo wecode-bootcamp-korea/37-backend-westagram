@@ -142,8 +142,8 @@ appDataSource.initialize()
 //   [ user_id, post_id ]
 // );
 
-    res.status(201).json({ "message" : "likeCreated"});
-})
+//     res.status(201).json({ "message" : "likeCreated"});
+// })
 
   const start = async () => {
     try {
