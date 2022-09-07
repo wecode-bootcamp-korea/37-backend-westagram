@@ -18,6 +18,7 @@ database
     console.error("Error during Data Source initialization", err);
   });
 
+
 const writePost = async (title, content, userId) => {
   try {
     return await database.query(
@@ -36,7 +37,7 @@ const writePost = async (title, content, userId) => {
   }
 };
 
-const postsList = async () => {
+const getPostsList = async () => {
   try {
     return await database.query(
       `SELECT posts.user_id AS userId,
@@ -81,7 +82,7 @@ const modifyPost = async (title, content, postId) => {
   }
 };
 
-const delPost = async (postId) => {
+const deletePost = async (postId) => {
   try {
     await database.query(
       `DELETE FROM posts
@@ -90,7 +91,7 @@ const delPost = async (postId) => {
       [postId]
     );
   } catch (err) {
-    const error = new Error("존재하지않는글이거나 권한이없습니다");
+    const error = new Error("INVALID_DATA_INPUT");
     error.statusCode = 500;
     throw error;
   }
@@ -98,7 +99,7 @@ const delPost = async (postId) => {
 
 module.exports = {
   writePost,
-  postsList,
+  getPostsList,
   modifyPost,
-  delPost,
+  deletePost,
 };

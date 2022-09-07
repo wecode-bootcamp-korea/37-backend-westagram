@@ -5,7 +5,7 @@ const writePost = async (req, res) => {
     const { title, content, userId } = req.body;
 
     if (!title || !content || !userId) {
-      return res.status(400).json({ message: "제목과 내용을 입력하세요" });
+      return res.status(400).json({ message: "KEY_ERROR" });
     }
 
     await postService.writePost(title, content, userId);
@@ -18,9 +18,9 @@ const writePost = async (req, res) => {
   }
 };
 
-const postsList = async (req, res) => {
+const getPostsList = async (req, res) => {
   try {
-    const result = await postService.postsList();
+    const result = await postService.getPostsList();
     return await res.status(201).json(result);
   } catch (err) {
     console.log(err);
@@ -39,15 +39,15 @@ const modifyPost = async (req, res) => {
   }
 };
 
-const delPost = async (req, res) => {
+const deletePost = async (req, res) => {
   try {
     const { postId } = req.body;
 
     if (!postId) {
-      return res.status(400).json({ message: "삭제할 글ID를 입력하세요" });
+      return res.status(400).json({ message: "KEY_ERROR" });
     }
 
-    await postService.delPost(postId);
+    await postService.deletePost(postId);
     return res.status(200).json({
       message: "postingDeleted",
     });
@@ -59,7 +59,7 @@ const delPost = async (req, res) => {
 
 module.exports = {
   writePost,
-  postsList,
+  getPostsList,
   modifyPost,
-  delPost,
+  deletePost,
 };

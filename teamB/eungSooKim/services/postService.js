@@ -5,23 +5,23 @@ const writePost = async (title, content, userId) => {
   return writePost;
 };
 
-const postsList = async () => {
-  return await postDao.postsList();
+const getPostsList = async () => {
+  return await postDao.getPostsList();
 };
 
 const modifyPost = async (title, content, postId) => {
-  const modify = postDao.modifyPost(title, content, postId);
-  return await modify;
+  const modifyPost = postDao.modifyPost(title, content, postId);
+  return await modifyPost;
 };
 
-const delPost = async (postId) => {
-  const delPost = postDao.delPost(postId);
-  return await delPost;
+const deletePost = async (postId) => {
+  const deletePost = postDao.deletePost(postId);
+  return await deletePost;
 };
 
 module.exports = {
   writePost,
-  postsList,
+  getPostsList,
   modifyPost,
-  delPost,
+  deletePost,
 };

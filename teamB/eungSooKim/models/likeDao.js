@@ -29,8 +29,8 @@ const likePost = async (postId, userId) => {
       [postId, userId]
     );
   } catch (err) {
-    const error = new Error("동일한 글에 추천을 할 수 없습니다");
-    error.statusCode = 500;
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
     throw error;
   }
 };

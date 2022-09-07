@@ -5,7 +5,7 @@ const likePost = async (req, res) => {
     const { postId, userId } = req.body;
 
     if (!postId || !userId) {
-      return res.status(400).json({ message: "Invalid postId or userId" });
+      return res.status(400).json({ message: "KEY_ERROR" });
     }
 
     await likeService.likePost(postId, userId);
