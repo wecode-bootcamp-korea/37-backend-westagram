@@ -3,7 +3,7 @@ const { postController } = require('../controllers');
 
 const router = express.Router();
 
-router.post('', postController.writePost);
+router.post('', postController.postPost);
 router.get('', postController.getPosts);
 router.get('/users/:userId', postController.getPostsByUser);
 router.patch('/:postId', postController.patchPost);

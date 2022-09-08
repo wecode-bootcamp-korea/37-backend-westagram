@@ -1,4 +1,3 @@
-// client의 입출력 관리 ,request/response
 const { userService } = require('../services')
 
 const signUp = async (req, res) => {
@@ -11,7 +10,6 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
     const { email, password } = req.body;
     const accessToken = await userService.signIn(email, password)
-//    console.log(accessToken)
     return res.status(200).json({ token : accessToken})
 }
 

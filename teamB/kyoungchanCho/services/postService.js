@@ -1,31 +1,31 @@
 const { postDao } = require('../models')
 
-const writePost = async (title, content, userId) => {
-    return await postDao.createPost(title, content, userId);
+const postPost = async (title, content, userId) => {
+    return await postDao.postPost(title, content, userId);
 }
 
 const getPosts = async () => {
-    return await postDao.lookPosts();
+    return await postDao.getPosts();
 }
 
 const getPostsByUser = async ( userId ) => {
-    return await postDao.lookPostsByUser(userId);
+    return await postDao.getPostsByUser(userId);
 }
 
 const patchPost = async (title, postId) => {
-    return await postDao.updatePost(title, postId);
+    return await postDao.patchPost(title, postId);
 }
 
 const afterPatchPost = async (postId) => {
-    return await postDao.afterUpdatePost(postId)
+    return await postDao.afterPatchPost(postId)
 }
 
 const deletePost = async (postId) => {
-    return await postDao.removePost(postId)
+    return await postDao.deletePost(postId)
 }
 
 module.exports = {
-    writePost,
+    postPost,
     getPosts,
     getPostsByUser,
     patchPost,

@@ -1,23 +1,6 @@
-const { DataSource } =require('typeorm');
+const database = require('./DataSource')
 
-const database = new DataSource({
-    type: process.env.TYPEORM_CONNECTION,
-    host: process.env.TYPEORM_HOST,
-    port: process.env.TYPEORM_PORT,
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE
-});
-
-database.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    })
-    .catch((err) => {
-        console.error("Error during Data Source initialization", err)
-    })
-
-const createUser = async (name, email, profileImage, password) => {
+const postUser = async (name, email, profileImage, password) => {
     const user = await database.query(
         `INSERT INTO users(
             name,
@@ -31,7 +14,7 @@ const createUser = async (name, email, profileImage, password) => {
     return user;
 };
 
-const exportUser = async (email, password) => {
+const verifyUser = async (email, password) => {
     const [userEncryption] = await database.query(
         `SELECT
             id,
@@ -46,6 +29,6 @@ const exportUser = async (email, password) => {
 }
 
 module.exports = {
-    createUser,
-    exportUser,
+    postUser,
+    verifyUser,
 }

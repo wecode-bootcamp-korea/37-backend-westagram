@@ -1,23 +1,6 @@
-const { DataSource } =require('typeorm');
+const database = require('./DataSource')
 
-const database = new DataSource({
-    type: process.env.TYPEORM_CONNECTION,
-    host: process.env.TYPEORM_HOST,
-    port: process.env.TYPEORM_PORT,
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE
-});
-
-database.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    })
-    .catch((err) => {
-        console.error("Error during Data Source initialization", err)
-    })
-
-const createPost = async (title, content, userId) => {
+const postPost = async (title, content, userId) => {
     return await database.query(
         `INSERT INTO posts(
         title,
@@ -29,14 +12,14 @@ const createPost = async (title, content, userId) => {
     );
 }
 
-const lookPosts = async () => {
+const getPosts = async () => {
     return await database.query(
         `SELECT * FROM posts;
         `
     );
 };
 
-const lookPostsByUser = async ( userId ) => {
+const getPostsByUser = async ( userId ) => {
     return await database.query(
         `SELECT
             users.id AS userId,
@@ -52,7 +35,7 @@ const lookPostsByUser = async ( userId ) => {
     );        
 }
 
-const updatePost = async ( title, postId) => {
+const patchPost = async ( title, postId) => {
     return await database.query(
         `UPDATE posts SET
             posts.title = ?
@@ -62,7 +45,7 @@ const updatePost = async ( title, postId) => {
     )
 }
 
-const afterUpdatePost = async (postId) => {
+const afterPatchPost = async (postId) => {
     return await database.query (
         `SELECT
             users.id AS userId,
@@ -78,7 +61,7 @@ const afterUpdatePost = async (postId) => {
     )
 }
 
-const removePost = async (postId) => {
+const deletePost = async (postId) => {
     return await database.query (
         `DELETE
         FROM posts
@@ -89,10 +72,10 @@ const removePost = async (postId) => {
 }
 
 module.exports = {
-    createPost,
-    lookPosts,
-    lookPostsByUser,
-    updatePost,
-    afterUpdatePost,
-    removePost,
+    postPost,
+    getPosts,
+    getPostsByUser,
+    patchPost,
+    afterPatchPost,
+    deletePost,
 }
