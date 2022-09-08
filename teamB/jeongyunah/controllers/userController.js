@@ -1,5 +1,5 @@
 const userService = require('../services/userService');
-
+const jwt = require('jsonwebtoken');
 
 const signUp = async (req, res) => {
   try {
@@ -21,6 +21,26 @@ const signUp = async (req, res) => {
 };
 
 
+const signIn = async (req, res) => {
+  try{
+    const {email, password} = req.body;
+
+    if(!email || !password){
+      return res.status(400).json({message : 'KEY_ERROR'});
+
+    }
+    await userService.signIn(email, password);
+    return res.status(201).json({
+      message: 'userCreated',
+    });
+  }
+  catch (err) {
+
+  }
+}
+
+
 module.exports = {
-	signUp
+	signUp,
+  signIn
 }
