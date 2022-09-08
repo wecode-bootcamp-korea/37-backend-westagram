@@ -1,29 +1,29 @@
 //데이터베이스와 연결, initialize 객체를 호출
 
-const { DataSource } = require('typeorm');
+const { DataSource } = require("typeorm");
 const database = new DataSource({
-    type: process.env.TYPEORM_CONNECTION,
-    host: process.env.TYPEORM_HOST,
-    port: process.env.TYPEORM_PORT,
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE
+  type: process.env.TYPEORM_CONNECTION,
+  host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
 });
 
 database
-    .initialize()
-    .then(() => {
-        console.log("Post data Source has been initialized!");
-    })
-    .catch((err) => {
-        console.error('Error occurred during Data Source initialization', err);
-        database.destroy();
-    });
+  .initialize()
+  .then(() => {
+    console.log("Post data Source has been initialized!");
+  })
+  .catch((err) => {
+    console.error("Error occurred during Data Source initialization", err);
+    database.destroy();
+  });
 
 const createPost = async (title, description, cover_image, users_id) => {
-    try {
-        const post = await database.query(
-            `INSERT INTO posts(
+  try {
+    const post = await database.query(
+      `INSERT INTO posts(
                 title,
                 description, 
                 cover_image, 
@@ -31,45 +31,47 @@ const createPost = async (title, description, cover_image, users_id) => {
                 ) 
                 VALUES (?, ?, ?, ?);
             `,
-            [ title, description, cover_image, users_id ]
-        );
+      [title, description, cover_image, users_id]
+    );
 
-        return post;
-    }
-    catch (err) {
-        const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 400;
-        throw error;
-    }
+    return post;
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
+    throw error;
+  }
 };
 
 const getAllPost = async () => {
-    try {
-        return await database.query(
-        `SELECT * FROM posts`,
-        );
-    }
-    catch (err) {
-        const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 400;
-        throw error;
-    };
+  try {
+    return await database.query(`SELECT * FROM posts`);
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
+    throw error;
+  }
 };
 
-const updatePost = async ( postId, title, description, cover_image, users_id ) => {
-    try {
-        await database.query(
-            `UPDATE posts 
+const updatePost = async (
+  postId,
+  title,
+  description,
+  cover_image,
+  users_id
+) => {
+  try {
+    await database.query(
+      `UPDATE posts 
             SET title = ?,
                 description = ?,
                 cover_image = ?,
                 users_id = ?
             WHERE id = ?`,
-            [ title, description, cover_image, users_id, postId ]
-        );
+      [title, description, cover_image, users_id, postId]
+    );
 
-        return await database.query(
-            `SELECT
+    return await database.query(
+      `SELECT
                 p.users_id as userId,
                 p.id as postingId,
                 p.cover_image as userName,
@@ -77,33 +79,32 @@ const updatePost = async ( postId, title, description, cover_image, users_id ) =
                 p.description as postingContent
             FROM posts p
             WHERE p.id like ?;`,
-            [ postId ]
-        );
-    } catch (err) {
-        const error = new Error(`INVALID_DATA_INPUT`);
-        error.statusCode = 400;
-        throw error;
-    }
-}
+      [postId]
+    );
+  } catch (err) {
+    const error = new Error(`INVALID_DATA_INPUT`);
+    error.statusCode = 400;
+    throw error;
+  }
+};
 
-const deletePost = async ( postId ) => {
-    try {
-        return await database.query(
-        `DELETE FROM posts
+const deletePost = async (postId) => {
+  try {
+    return await database.query(
+      `DELETE FROM posts
         WHERE posts.id = ?;`,
-        [ postId ]
-        )
-    }
-    catch (err) {
-        const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 400;
-        throw error;
-    }
-}
+      [postId]
+    );
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 400;
+    throw error;
+  }
+};
 
 module.exports = {
-    createPost,
-    getAllPost,
-    updatePost,
-    deletePost,
-}
+  createPost,
+  getAllPost,
+  updatePost,
+  deletePost,
+};

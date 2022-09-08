@@ -1,9 +1,9 @@
-const userDao = require('./userDao');
-const postDao = require('./postDao');
-const likeDao = require('./likeDao');
+const userDao = require("./userDao");
+const postDao = require("./postDao");
+const likeDao = require("./likeDao");
 
 module.exports = {
-    userDao,
-    postDao,
-    likeDao,
-}
+  userDao,
+  postDao,
+  likeDao,
+};
