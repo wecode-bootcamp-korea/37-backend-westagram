@@ -2,8 +2,8 @@ const db = require('./data-source')
 
 const checkOverlap = async ( email ) => {
     return await db.database.query(    
-        `SELECT email FROM users
-         WHERE email = ?;
+        `SELECT * FROM users
+         WHERE users.email = ?;
         `,[ email ]
     )
 }
