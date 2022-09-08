@@ -1,15 +1,26 @@
 const postService = require('../services/postService');
 
-// 게시글 등록
-const postInput = async (req, res) => {
-  try {
-    const { title, content, userId } = req.body;
 
+// 게시글 등록
+const postInput = async (req, res) => {  
+  
+  try {
+  const { title, content, userId, token } = req.body;
+    
     if ( !title || !content || !userId ) {
       return res.status(400).json({ message: 'KEY_ERROR' });
     }
 
-    await postService.postInput( title, content, userId);
+    try {
+      const decoded = jwt.verify(token, secretKey);
+    } catch (err) {
+      const error = new Error("token is not valid")
+      error.statusCode = 401;
+      console.log(error);
+      throw error;
+    }
+
+    await postService.postInput( title, content, userId, token);
     return res.status(201).json({
       message: 'postInput_SUCCESS',
     });
@@ -24,7 +35,8 @@ const postInput = async (req, res) => {
 const postCheck = async (req, res) => {
   try {
     const posts = await postService.postCheck();
-    return res.status(201).json({
+    return res.status
+    (201).json({
       Data: posts
     });
   } catch (err) {

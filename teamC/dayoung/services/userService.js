@@ -48,8 +48,6 @@ const signIn = async (email, password) => {
     throw err;
   }
 
-
-  const payLoad = { foo: 'bar' };
   const secretKey = 'mySecretKey';
   const jwtToken = jwt.sign({ sub: user.id, email: user.email} , secretKey);
 

@@ -1,6 +1,9 @@
 const postDao = require('../models/postDao')
+const jwt = require('jsonwebtoken');
+const secretKey = 'mySecretKey'; 
 
-const postInput = async ( title, content, userId ) => {
+const postInput = async ( title, content, userId ,token) => {
+
   const createPost = await postDao.createPost( title, content, userId );
 
   return createPost;

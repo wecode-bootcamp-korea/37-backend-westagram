@@ -1,4 +1,4 @@
-const userService = require('../services/userService');
+let token = "";const userService = require('../services/userService');
 
 const signUp = async (req, res) => {
   try {
@@ -22,7 +22,7 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   try {
     const { email , password} = req.body;
-    const token = await userService.signIn( email, password );
+    token = await userService.signIn( email, password );
     return res.status(201).json(token);
   } catch (err) {
     console.log(err);
