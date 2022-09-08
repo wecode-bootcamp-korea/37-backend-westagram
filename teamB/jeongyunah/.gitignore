@@ -1,5 +1,4 @@
 node_modules/
-env.js
 .env
 db/schema.sql
 .vscode
