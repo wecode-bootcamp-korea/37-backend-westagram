@@ -18,6 +18,17 @@ const signUp = async (req, res) => {
   }
 };
 
+
+const signIn = async (req, res) => {
+  try {
+    const { email , password} = req.body;
+    const token = await userService.signIn( email, password );
+    return res.status(201).json(token);
+  } catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};
 module.exports = {
-	signUp
+	signUp, signIn
 }
