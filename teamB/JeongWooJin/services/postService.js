@@ -1,6 +1,6 @@
 const postDao = require('../models/postDao')
 
-const enrollPost = async (title, content, user_id) => {
+const createPost = async (title, content, user_id) => {
 
       const creatPost = await postDao.createPost(
       title,
@@ -10,7 +10,7 @@ const enrollPost = async (title, content, user_id) => {
         return creatPost;
       };
   
-const postLookup = async () => {
+const getPostList = async () => {
       const lookUpPost = await postDao.lookUpPost();
         return lookUpPost;
       };
@@ -27,5 +27,5 @@ const deletePost = async (postId) => {
   
 
   module.exports = {
-      enrollPost, postLookup, modifyPost, deletePost
+      createPost, getPostList, modifyPost, deletePost
   }

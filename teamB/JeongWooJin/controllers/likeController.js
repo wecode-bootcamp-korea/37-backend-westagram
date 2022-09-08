@@ -1,9 +1,9 @@
 const likeService = require('../services/likeService');
 
-const pushLikes = async (req, res) => {
+const createLikes = async (req, res) => {
   try {
     const {user_id, post_id}  = req.body
-    await likeService.pushLikes(user_id, post_id);
+    await likeService.createLikes(user_id, post_id);
     return res.status(201).json({ "message" : "likeCreated"});
   } catch (err) {
     console.log(err);
@@ -12,5 +12,5 @@ const pushLikes = async (req, res) => {
 };
 
 module.exports = {
-	pushLikes
+	createLikes
 }

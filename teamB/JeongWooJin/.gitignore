@@ -1,6 +1,6 @@
 .env
 node_modules/
-db/schma.sql
+db/schema.sql
 .vscode
 
 ### macOS ###

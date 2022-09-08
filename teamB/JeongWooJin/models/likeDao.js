@@ -16,7 +16,7 @@ appDataSource.initialize()
       console.error("Error during Data Source initialization", err)
   appDataSource.destroy()
   });
-const pushLikes = async (user_id, post_id) => {
+const createLikes = async (user_id, post_id) => {
 console.log(user_id, post_id);
   try{
     await appDataSource.query(
@@ -36,5 +36,5 @@ console.log(user_id, post_id);
 }
 
 module.exports = {
-  pushLikes
+  createLikes
 }

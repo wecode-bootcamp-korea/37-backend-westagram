@@ -3,8 +3,8 @@ const postController = require('../controllers/postController');
 
 const router = express.Router();
 
-router.post('/enrollpost', postController.enrollPost);
-router.get('/lookup', postController.postLookup);
+router.post('/createpost', postController.createPost);
+router.get('/lookup', postController.getPostList);
 router.patch('/modifyPost/:post_id',postController.modifyPost);
 router.delete('/deletePost/:post_id',postController.deletePost);
 

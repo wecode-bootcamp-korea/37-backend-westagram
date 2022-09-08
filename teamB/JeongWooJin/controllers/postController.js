@@ -1,6 +1,6 @@
 const postService = require('../services/postService');
 
-const enrollPost = async (req, res) => {
+const createPost = async (req, res) => {
   try {
     const { title, content, user_id } = req.body;
     
@@ -8,7 +8,7 @@ const enrollPost = async (req, res) => {
       return res.status(400).json({ message: 'KEY_ERROR' });
     }
    
-    await postService.enrollPost( title, content, user_id );
+    await postService.createPost( title, content, user_id );
     return res.status(201).json({
       message: 'POST_SUCCESS',
     });
@@ -18,10 +18,10 @@ const enrollPost = async (req, res) => {
   }
 };
 
-const postLookup = async (req, res) => {
+const getPostList = async (req, res) => {
   try {
-    const result = await postService.postLookup();
-    return res.status(201).json({data : result});
+    const result = await postService.getPostList();
+    return res.status(200).json({data : result});
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 500).json({ message: err.message });
@@ -33,7 +33,7 @@ const modifyPost = async (req, res) => {
     const postId = req.params.post_id;
     const {content}  = req.body
     const result = await postService.modifyPost(postId, content);
-    return res.status(201).json({data : result});
+    return res.status(200).json({data : result});
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 500).json({ message: err.message });
@@ -54,5 +54,5 @@ const deletePost = async (req, res) => {
 
 
 module.exports = {
-	enrollPost, postLookup, modifyPost, deletePost
+	createPost, getPostList, modifyPost, deletePost
 }

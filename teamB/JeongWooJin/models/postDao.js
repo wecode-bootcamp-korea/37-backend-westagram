@@ -18,7 +18,7 @@ appDataSource.initialize()
   appDataSource.destroy()
   });
 
-  const createPost = async (title, content, user_id ) => {
+const createPost = async (title, content, user_id ) => {
     try{
     return await appDataSource.query(
       `INSERT INTO posts(
@@ -36,14 +36,19 @@ appDataSource.initialize()
    }
   }
 
-  const lookUpPost = async () => {
+const lookUpPost = async () => {
 
     try{
       return await appDataSource.query(
       `SELECT
-      posts.id, posts.title, posts.user_id, posts.content, users.id, users.profile_image
-      FROM posts, users
-      WHERE posts.user_id = users.id;`,
+      posts.id, 
+      posts.title, 
+      posts.user_id, 
+      posts.content, 
+      users.id, 
+      users.profile_image
+      FROM users INNER JOIN posts on posts.user_id = users.id
+      WHERE posts.id like ${postId};`
     );
       } catch (err) {
        const error = new Error(`INVALID_DATA_INPUT`);
@@ -52,7 +57,7 @@ appDataSource.initialize()
       }
   }
 
-  const modifyPost = async (postId, content) => {
+const modifyPost = async (postId, content) => {
 
     try{
       await appDataSource.query(
@@ -75,7 +80,7 @@ appDataSource.initialize()
       }
   }
 
-  const deletePost = async (postId) => {
+const deletePost = async (postId) => {
 
     try{
       await appDataSource.query(
