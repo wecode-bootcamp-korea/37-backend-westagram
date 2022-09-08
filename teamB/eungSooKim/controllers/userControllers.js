@@ -18,7 +18,7 @@ const signUp = async (req, res) => {
   }
 };
 
-const postsUser = async (req, res) => {
+const getPostsUser = async (req, res) => {
   try {
     if (!userId) {
       return res.status(400).json({ message: "KEY_ERROR" });
@@ -30,7 +30,7 @@ const postsUser = async (req, res) => {
   }
 };
 
-const userPosts = async (req, res) => {
+const getUserPosts = async (req, res) => {
   try {
     const { userId } = req.body;
     if (!userId) {
@@ -53,6 +53,6 @@ const userPosts = async (req, res) => {
 
 module.exports = {
   signUp,
-  userPosts,
-  postsUser,
+  getUserPosts,
+  getPostsUser,
 };

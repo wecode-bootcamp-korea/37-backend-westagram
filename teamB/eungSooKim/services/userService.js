@@ -13,18 +13,18 @@ const signUp = async (name, email, password, profileImage) => {
   return signUp;
 };
 
-const userPosts = async (userId) => {
-  const userPosts = await userDao.userPosts(userId);
+const getUserPosts = async (userId) => {
+  const userPosts = await userDao.getUserPosts(userId);
   return userPosts;
 };
 
-const postsUser = async (userId) => {
-  const postsUser = await userDao.postsUser(userId);
+const getPostsUser = async (userId) => {
+  const postsUser = await userDao.getPostsUser(userId);
   return postsUser;
 };
 
 module.exports = {
   signUp,
-  userPosts,
-  postsUser,
+  getUserPosts,
+  getPostsUser,
 };

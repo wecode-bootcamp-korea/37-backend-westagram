@@ -37,7 +37,7 @@ const signUp = async (name, email, password, profileImage) => {
   }
 };
 
-const userPosts = async (userId) => {
+const getUserPosts = async (userId) => {
   try {
     return await database.query(
       `SELECT users.id AS userId,
@@ -52,7 +52,7 @@ const userPosts = async (userId) => {
   }
 };
 
-const postsUser = async (userId) => {
+const getPostsUser = async (userId) => {
   try {
     return await database.query(
       `SELECT posts.id AS postingID, 
@@ -69,6 +69,6 @@ const postsUser = async (userId) => {
 };
 module.exports = {
   signUp,
-  userPosts,
-  postsUser,
+  getUserPosts,
+  getPostsUser,
 };
