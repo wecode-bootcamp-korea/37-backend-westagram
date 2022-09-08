@@ -39,24 +39,28 @@ const signUp = async (name, email, password, profileImage) => {
 
 const userPosts = async (userId) => {
   try {
-    const result = {};
-    const rows = await database.query(
+    return await database.query(
       `SELECT users.id AS userId,
             users.profile_image AS userProfileId
          FROM users WHERE users.id = ?`,
       [userId]
     );
-    result.userId = rows[0].userId;
-    result.userProfileId = rows[0].userProfileId;
-    const postInfo = await database.query(
+  } catch (err) {
+    const error = new Error("INVALID_DATA_INPUT");
+    error.statusCode = 500;
+    throw error;
+  }
+};
+
+const postsUser = async (userId) => {
+  try {
+    return await database.query(
       `SELECT posts.id AS postingID, 
         posts.profile_image AS postingImageUrl, 
         posts.title AS postingContent FROM posts 
         WHERE ?  = posts.user_id`,
       [userId]
     );
-    result.postings = postInfo;
-    return result;
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");
     error.statusCode = 500;
@@ -66,4 +70,5 @@ const userPosts = async (userId) => {
 module.exports = {
   signUp,
   userPosts,
+  postsUser,
 };

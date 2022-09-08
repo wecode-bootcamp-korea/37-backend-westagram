@@ -18,13 +18,32 @@ const signUp = async (req, res) => {
   }
 };
 
+const postsUser = async (req, res) => {
+  try {
+    if (!userId) {
+      return res.status(400).json({ message: "KEY_ERROR" });
+    }
+    return await userService.postsUser(userId);
+  } catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 500).json({ message: err.message });
+  }
+};
+
 const userPosts = async (req, res) => {
   try {
     const { userId } = req.body;
     if (!userId) {
       return res.status(400).json({ message: "KEY_ERROR" });
     }
-    let result = await userService.userPosts(userId);
+    const result = {};
+    let [userInfo] = await userService.userPosts(userId);
+    let postsInfo = await userService.postsUser(userId);
+
+    result.userId = userInfo.userId;
+    result.userProfileId = userInfo.userProfileId;
+    result.postings = postsInfo;
+
     return await res.status(200).json(result);
   } catch (err) {
     console.log(err);
@@ -35,4 +54,5 @@ const userPosts = async (req, res) => {
 module.exports = {
   signUp,
   userPosts,
+  postsUser,
 };
