@@ -23,7 +23,7 @@ const getPostsUser = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ message: "KEY_ERROR" });
     }
-    return await userService.postsUser(userId);
+    return await userService.getPostsUser(userId);
   } catch (err) {
     console.log(err);
     return res.status(err.statusCode || 500).json({ message: err.message });
@@ -37,8 +37,8 @@ const getUserPosts = async (req, res) => {
       return res.status(400).json({ message: "KEY_ERROR" });
     }
     const result = {};
-    let [userInfo] = await userService.userPosts(userId);
-    let postsInfo = await userService.postsUser(userId);
+    let [userInfo] = await userService.getUserPosts(userId);
+    let postsInfo = await userService.getPostsUser(userId);
 
     result.userId = userInfo.userId;
     result.userProfileId = userInfo.userProfileId;
