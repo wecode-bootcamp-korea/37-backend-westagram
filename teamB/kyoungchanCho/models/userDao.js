@@ -42,7 +42,6 @@ const exportUser = async (email, password) => {
         `,
         [email]
     );
-//    console.log(userEncryption)
     return userEncryption;
 }
 

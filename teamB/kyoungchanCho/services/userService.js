@@ -15,21 +15,17 @@ const signUp = async (name, email, profileImage, password) => {
 
 const signIn = async (email, password) => {
     const user= await userDao.exportUser(email);
-    console.log(user)
-    const checkHash = async (password, hashedPassword) => {
-        return await bcrypt.compare(password, hashedPassword)
-    }
-    const isVerified = async () => {
-        await checkHash(password, user.password);
+    //console.log(user)
 
-        if (!isVerified) {
-            return "error" 
-        } else {
-            const token = jwt.sign({ user_id: user.id}, "secretkey");
-            return token;    
-        }
-    };
-}
+    const checkHash = await bcrypt.compare(password, user.password)
+    if(!checkHash) {
+        const err = new Error("invalid password");
+        err.statusCode = 400;
+        throw err;
+    }
+    return jwt.sign({ sub: user.id, email: user.email }, process.env.SECRETKEY);
+};
+
 
 module.exports = {
     signUp,

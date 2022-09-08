@@ -10,18 +10,12 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
     const { email, password } = req.body;
-    const user = await userService.signIn(email, password)
-    console.log(user)
-    return res.status(200).json({ token : user})
-}
-
-const getPostsByUser = async (req, res) => {
-    const posts = await userService.getPostsByUser()
-    return res.status(200).json({ data : posts})
+    const accessToken = await userService.signIn(email, password)
+//    console.log(accessToken)
+    return res.status(200).json({ token : accessToken})
 }
 
 module.exports = {
     signUp,
     signIn,
-    getPostsByUser,
 }

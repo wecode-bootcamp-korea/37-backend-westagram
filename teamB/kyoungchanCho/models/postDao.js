@@ -18,7 +18,7 @@ database.initialize()
     })
 
 const createPost = async (title, content, userId) => {
-    const post = await database.query(
+    return await database.query(
         `INSERT INTO posts(
         title,
         content,
@@ -27,32 +27,72 @@ const createPost = async (title, content, userId) => {
         `,
         [ title, content, userId ]
     );
-    return post;
 }
 
 const lookPosts = async () => {
     return await database.query(
         `SELECT * FROM posts;
         `
-    )
+    );
 };
 
-const lookPostsByUser = async () => {
+const lookPostsByUser = async ( userId ) => {
     return await database.query(
         `SELECT
             users.id AS userId,
-            users.profile_image AS userProfileImage
+            users.profile_image AS userProfileImage,
             posts.id AS postingId,
-            posts.title AS postTitle,
+            posts.title AS postingTitle,
             posts.content AS postingContent
         FROM users
         JOIN posts ON users.id = posts.user_id
-        `
+        WHERE users.id = ?
+        `,
+        [userId]
     );        
+}
+
+const updatePost = async ( title, postId) => {
+    return await database.query(
+        `UPDATE posts SET
+            posts.title = ?
+        WHERE posts.id = ? 
+        `,
+        [title, postId]
+    )
+}
+
+const afterUpdatePost = async (postId) => {
+    return await database.query (
+        `SELECT
+            users.id AS userId,
+            users.name AS userName,
+            posts.id AS postingId,
+            posts.title AS postingTitle,
+            posts.content AS postingContent
+        FROM users
+        JOIN posts ON posts.user_id = users.id
+        WHERE posts.id = ?
+        `,
+        [postId]
+    )
+}
+
+const removePost = async (postId) => {
+    return await database.query (
+        `DELETE
+        FROM posts
+        WHERE posts.id = ?
+        `,
+        [postId]
+    );
 }
 
 module.exports = {
     createPost,
     lookPosts,
     lookPostsByUser,
+    updatePost,
+    afterUpdatePost,
+    removePost,
 }
