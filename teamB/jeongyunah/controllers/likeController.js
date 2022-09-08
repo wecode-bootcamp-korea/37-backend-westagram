@@ -1,18 +1,18 @@
 const likeService = require('../services/likeService');
 
 const addLike = async (req, res) => {
-    try {
-      const user_id = req.params.userId;
-      const post_id = req.params.postId;
+  try {
+    const user_id = req.params.userId;
+    const post_id = req.params.postId;
 
-    if ( !user_id || !post_id) {
+    if (!user_id || !post_id) {
       return res.status(400).json({ message: 'KEY_ERROR' });
     }
 
-    await likeService.addLike( user_id, post_id );
-    
+    await likeService.addLike(user_id, post_id);
+
     return res.status(201).json({
-      message : "likeCreated"
+      message: "likeCreated"
     });
 
   } catch (err) {
@@ -22,5 +22,5 @@ const addLike = async (req, res) => {
 };
 
 module.exports = {
-    addLike
+  addLike
 }
