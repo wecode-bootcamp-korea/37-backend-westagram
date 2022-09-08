@@ -1,5 +1,4 @@
-
-const { DataSource } = require('typeorm');
+const { DataSource } = require("typeorm");
 
 const myDataSource = new DataSource({
     type: process.env.TYPEORM_CONNECTION,
@@ -11,27 +10,27 @@ const myDataSource = new DataSource({
 })
 
 myDataSource.initialize()
-  .then(() => {
-    console.log("Data Source has been initialized!");
-  })
-  .catch((err) => {
-    console.error("Error occurred during Data Source initialization", err);
-	  myDataSource.destroy();
-  });
+	.then(() => {
+		console.log("Data Source has been initialized!");
+	})
+	.catch((err) => {
+		console.error("Error occurred during Data Source initialization", err);
+		myDataSource.destroy();
+	});
 
-const createUser = async ( name, email, password,profileImage ) => {
+const createUser = async (name, email, password, profileImage) => {
 	try {
-		return await myDataSource.query(
-		`INSERT INTO users( 
-			 name,
-			 email, 
-			 password,
-			 profile_image
-			 ) VALUES ( ? , ? , ? , ? )`,
-		[name, email, password, profileImage]
-	  );
+		return await myDataSource.query(`
+			INSERT INTO users(
+		    	name,
+		    	email,
+		    	password,
+		    	profile_image
+			) VALUES (?, ?, ?, ?);`,
+			[name, email, password, profileImage]
+		);
 	} catch (err) {
-		const error = new Error('INVALID_DATA_INPUT');
+		const error = new Error("INVALID_DATA_INPUT");
 		error.statusCode = 500;
 		throw error;
 	}
@@ -40,5 +39,5 @@ const createUser = async ( name, email, password,profileImage ) => {
 
 
 module.exports = {
-  createUser
-}
+	createUser
+};

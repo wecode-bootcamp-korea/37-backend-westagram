@@ -4,7 +4,7 @@ const router = express.Router();
 
 const userRouter = require("./userRouter");
 const postRouter = require("./postRouter");
-const likeRouter = require("./likeRouter")
+const likeRouter = require("./likeRouter");
 
 router.use("/users", userRouter.router);
 router.use("/posts", postRouter.router);

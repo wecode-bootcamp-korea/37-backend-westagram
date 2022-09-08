@@ -1,7 +1,7 @@
 const userDao = require('../models/userDao')
 const bcrypt = require ("bcrypt");
 
-const signUp = async (name, email, password, profileImage) => {
+const createUser = async (name, email, password, profileImage) => {
     // password validation using REGEX
     const pwValidation = new RegExp(
       '^(?=.*[A-Za-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,20})'
@@ -24,13 +24,9 @@ const signUp = async (name, email, password, profileImage) => {
           profileImage
         );
         return createUser;
-      };
+}
 
 
-
-
-  module.exports = {
-      signUp
-  }
-
-
+module.exports = {
+  createUser
+};
