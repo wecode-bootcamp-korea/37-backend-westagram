@@ -7,7 +7,7 @@ const myDataSource = new DataSource({
     port: process.env.TYPEORM_PORT,
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TY1PEORM_DATABASE
+    database: process.env.TYPEORM_DATABASE
 })
 
 myDataSource.initialize()
@@ -19,17 +19,16 @@ myDataSource.initialize()
 	  myDataSource.destroy();
   });
 
-const createUser = async ( name, email, password, profileImage ) => {
+const createUser = async ( name, email, password,profileImage ) => {
 	try {
 		return await myDataSource.query(
-		`INSERT INTO users(
-		    name,
-		    email,
-		    password,
-		    profile_image,
-		) VALUES (?, ?, ?, ?);
-		`,
-		[ name, email, password, profileImage ]
+		`INSERT INTO users( 
+			 name,
+			 email, 
+			 password,
+			 profile_image
+			 ) VALUES ( ? , ? , ? , ? )`,
+		[name, email, password, profileImage]
 	  );
 	} catch (err) {
 		const error = new Error('INVALID_DATA_INPUT');
@@ -37,6 +36,8 @@ const createUser = async ( name, email, password, profileImage ) => {
 		throw error;
 	}
 };
+
+
 
 module.exports = {
   createUser
