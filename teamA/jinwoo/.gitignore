@@ -1,5 +1,0 @@
-.env
-node_modules/
-db/schema copy.sql
-.vscode
-.DS_Store
