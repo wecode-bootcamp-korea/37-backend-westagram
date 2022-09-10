@@ -1,6 +1,7 @@
+const { SimpleConsoleLogger } = require("typeorm");
 const { database } = require("./data-source");
 
-const signUp = async (name, email, password, profileImage) => {
+const signUp = async (name, email, hashedPassword, profileImage) => {
   try {
     return await database.query(
       `INSERT INTO users(
@@ -10,7 +11,7 @@ const signUp = async (name, email, password, profileImage) => {
 		    profile_image
 		) VALUES (?, ?, ?, ?);
 		`,
-      [name, email, password, profileImage]
+      [name, email, hashedPassword, profileImage]
     );
   } catch (err) {
     const error = new Error("duplicated email");
@@ -18,6 +19,28 @@ const signUp = async (name, email, password, profileImage) => {
     throw error;
   }
 };
+
+const signIn = async (email) =>{
+  try {
+        const result = await database.query(
+      `SELECT 
+      users.id AS id,
+      users.email AS email,
+      users.password AS password
+      FROM users WHERE email = ?
+      `,
+      [email]
+    );
+    
+    return await result;
+  }
+  
+  catch (err) {
+    const error = new Error("EMAIL DOES NOT EXIST OR INVALID");
+    error.statusCode = 500;
+    throw error;
+  }
+}
 
 const getUserPosts = async (userId) => {
   try {
@@ -51,6 +74,7 @@ const getPostsUser = async (userId) => {
 };
 module.exports = {
   signUp,
+  signIn,
   getUserPosts,
   getPostsUser,
 };

@@ -18,6 +18,23 @@ const signUp = async (req, res) => {
   }
 };
 
+const signIn = async (req,res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "KEY_ERROR" });
+    }
+    const token = await userService.signIn(email, password);
+    console.log(token)
+    res.status(200).json({ accessToken: token});
+  }catch (err) {
+    console.log(err);
+    return res.status(err.statusCode || 500).json({ message: err.message });
+  }
+
+  
+}
+
 const getPostsUser = async (req, res) => {
   try {
     if (!userId) {
@@ -53,6 +70,7 @@ const getUserPosts = async (req, res) => {
 
 module.exports = {
   signUp,
+  signIn,
   getUserPosts,
   getPostsUser,
 };
