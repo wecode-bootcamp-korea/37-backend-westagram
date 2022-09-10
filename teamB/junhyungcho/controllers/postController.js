@@ -1,13 +1,13 @@
 const { postService } = require("../services/");
 
-const upload = async (req, res) => {
+const getPostUpload = async (req, res) => {
   try {
     const { title, description, cover_image, users_id } = req.body;
 
-    if (!title || !description || !cover_image || !users_id) {
+    if (!title || !description || !cover_image || !users_id)
       return res.status(400).json({ message: "KEY_ERROR" });
-    }
-    const post = await postService.upload(
+
+    const post = await postService.getPostUpload(
       title,
       description,
       cover_image,
@@ -15,21 +15,24 @@ const upload = async (req, res) => {
     );
 
     return res.status(201).json({ result: post });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-const list = async (req, res) => {
+const getPostAll = async (req, res) => {
   try {
-    const list = await postService.list();
+    let { limit, offset } = req.query;
+    const list = await postService.getPostAll(+limit, +offset);
     return res.status(200).json({ data: list });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-const update = async (req, res) => {
+const getPostUpdate = async (req, res) => {
   try {
     const { title, description, cover_image, users_id, postId } = req.body;
 
@@ -40,10 +43,10 @@ const update = async (req, res) => {
       !cover_image ||
       !users_id ||
       !postId
-    ) {
+    )
       return res.status(400).json({ message: "KEY_ERROR" });
-    }
-    const post = await postService.update(
+
+    const post = await postService.getPostUpdate(
       postId,
       title,
       description,
@@ -51,28 +54,31 @@ const update = async (req, res) => {
       users_id,
       postId
     );
+
     return res.status(201).json({ result: post });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-const erase = async (req, res) => {
+const getPostDelete = async (req, res) => {
   try {
     const { postId } = req.body;
-    if (!postId) {
-      return res.status(400).json({ message: "KEY_ERROR " });
-    }
-    await postService.erase(postId);
+    if (!postId) return res.status(400).json({ message: "KEY_ERROR " });
+
+    await postService.getPostDelete(postId);
+
     return res.status(204).json({ message: "postingDeleted" });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
 module.exports = {
-  upload,
-  list,
-  update,
-  erase,
+  getPostUpload,
+  getPostAll,
+  getPostUpdate,
+  getPostDelete,
 };

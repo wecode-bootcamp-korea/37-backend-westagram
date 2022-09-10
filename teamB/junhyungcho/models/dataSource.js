@@ -1,22 +1,22 @@
 const { DataSource } = require("typeorm");
 
 const database = new DataSource({
-  type: process.env.DB_TYPE,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  type: process.env.TYPEORM_CONNECTION,
+  host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
 });
 
-// database
-//     .initialize()
-//     .then(() => {
-//         console.log("User data Source has been initialized!");
-//     })
-//     .catch((err) => {
-//         console.error('Error occurred during Data Source initialization', err);
-//         database.destroy();
-//     });
+database
+  .initialize()
+  .then(() => {
+    console.log("Data Source has been initialized!");
+  })
+  .catch((err) => {
+    console.error("Error occurred during Data Source initialization", err);
+    database.destroy();
+  });
 
 module.exports = { database };

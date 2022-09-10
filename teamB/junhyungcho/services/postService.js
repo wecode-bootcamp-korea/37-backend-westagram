@@ -1,7 +1,17 @@
 //실제 로직이 돌아가는 파일
 const { postDao } = require("../models/");
+const checkAffectedRows = require("../utils/checkAffectedRows");
 
-const upload = async (title, description, cover_image, users_id) => {
+const getPostAll = async (limit, offset) => {
+  const range = await postDao.getAllPost(
+    limit,
+    offset,
+  );
+
+  return range;
+}
+
+const getPostUpload = async (title, description, cover_image, users_id) => {
   const upload = await postDao.createPost(
     title,
     description,
@@ -9,12 +19,12 @@ const upload = async (title, description, cover_image, users_id) => {
     users_id
   );
 
+  checkAffectedRows(upload);
+
   return upload;
 };
 
-const list = async () => await postDao.getAllPost();
-
-const update = async (postId, title, description, cover_image, users_id) => {
+const getPostUpdate = async (postId, title, description, cover_image, users_id) => {
   const edit = await postDao.updatePost(
     postId,
     title,
@@ -23,16 +33,22 @@ const update = async (postId, title, description, cover_image, users_id) => {
     users_id
   );
 
-  return update;
+  checkAffectedRows(edit);
+
+  return edit;
 };
 
-const erase = async (postId) => {
-  return await postDao.deletePost(postId);
+const getPostDelete = async (postId) => {
+  const deletePost = await postDao.deletePost(postId);
+
+  checkAffectedRows(deletePost);
+
+  return edit;
 };
 
 module.exports = {
-  upload,
-  list,
-  update,
-  erase,
+  getPostUpload,
+  getPostAll,
+  getPostUpdate,
+  getPostDelete,
 };

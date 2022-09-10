@@ -8,7 +8,8 @@ const heart = async (req, res) => {
     }
     await likeService.heart(userId, postId);
     res.status(201).json({ message: "likeCreated" });
-  } catch (err) {
+  } 
+  catch (err) {
     console.log(err);
     return res.status(err.statusCode || 500).json({ message: err.message });
   }

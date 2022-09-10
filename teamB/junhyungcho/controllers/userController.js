@@ -1,18 +1,15 @@
-//controller/userController.js
-//presentation layer
-//res, req 담당
 const { userService } = require("../services");
 
-const signUp = async (req, res) => {
+const getUserSignUp = async (req, res) => {
   try {
     const { first_name, last_name, age, email, password, profile_image } =
       req.body;
 
     if (!first_name || !last_name || !email || !password) {
-      return res.status(400).json({ message: "KEY_ERROR" });
+      return res.status(400).json({ message: "Please write your Info" });
     }
 
-    const user = await userService.signUp(
+    const user = await userService.getUserSignUp(
       first_name,
       last_name,
       age,
@@ -22,12 +19,13 @@ const signUp = async (req, res) => {
     );
 
     return res.status(201).json({ data: user });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-const postList = async (req, res) => {
+const getUserInfoWithPostings = async (req, res) => {
   try {
     let { userId } = req.body;
 
@@ -35,15 +33,16 @@ const postList = async (req, res) => {
       return res.status(400).json({ message: "KEY_ERROR" });
     }
 
-    const postList = await userService.inquireUserInfo(userId);
+    const postList = await userService.getUserInfoWithPostings(userId);
 
     return res.status(200).json({ data: postList });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 500).json({ message: err.message });
   }
 };
 
-const signIn = async (req, res) => {
+const getUserSignIn = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -51,16 +50,17 @@ const signIn = async (req, res) => {
       return res.status(400).json({ message: "KEY_ERROR" });
     }
 
-    const signIn = await userService.signIn(email, password);
+    const signIn = await userService.getUserSignIn(email, password);
 
     return res.status(200).json({ accessToken: signIn });
-  } catch (err) {
+  } 
+  catch (err) {
     return res.status(err.statusCode || 401).json({ message: err.message });
   }
 };
 
 module.exports = {
-  signUp,
-  postList,
-  signIn,
+  getUserSignUp,
+  getUserInfoWithPostings,
+  getUserSignIn,
 };
