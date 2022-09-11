@@ -1,5 +1,7 @@
 const userDao = require('../models/userDao')
 const bcrypt = require ("bcrypt");
+const jwt = require('jsonwebtoken');
+const KEY = process.env.SECRETKEY;
 
 const createUser = async (name, email, password, profileImage) => {
     // password validation using REGEX
@@ -22,11 +24,31 @@ const createUser = async (name, email, password, profileImage) => {
           email,
           hashPassword,
           profileImage
-        );
-        return createUser;
+    );
+      return createUser;
+}
+
+const signIn = async(email, password) => {
+  const signIn = await userDao.signIn(email);
+  
+  const payLoad = { userEmail : signIn.email };
+
+  const checkHash = async (password, hashPassword) => {
+      return await bcrypt.compare(password, hashPassword)
+  }
+  const result = await checkHash(password, signIn.password)
+  
+  if(result == false) {
+    const err = new Error ("Invalid User");
+    err.statusCode = 409;
+    throw err;
+  }
+  const jwtToken = jwt.sign(payLoad, KEY);
+  return jwtToken;
 }
 
 
 module.exports = {
-  createUser
+  createUser,
+  signIn
 };

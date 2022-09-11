@@ -20,18 +20,18 @@ myDataSource.initialize()
 
 const addLike = async (user_id, post_id) => {
 	try {
-        return await myDataSource.query(
-                `INSERT INTO likes(
-                  user_id, 
-                  post_id
-                ) VALUES (?, ?);`,
-                [user_id, post_id]
-        );
+    return await myDataSource.query(
+      `INSERT INTO likes(
+        user_id, 
+        post_id
+      ) VALUES (?, ?);`,
+      [user_id, post_id]
+    );
         
 	} catch (err) {
-        const error = new Error('INVALID_DATA_INPUT');
-        error.statusCode = 500;
-        throw error;
+    const error = new Error('INVALID_DATA_INPUT');
+    error.statusCode = 500;
+    throw error;
 	}
 };
 

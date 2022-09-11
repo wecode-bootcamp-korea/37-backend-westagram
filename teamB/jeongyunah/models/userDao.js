@@ -36,8 +36,27 @@ const createUser = async (name, email, password, profileImage) => {
 	}
 };
 
+const signIn = async(email) => {
+	try{
+		const [user] = await myDataSource.query(`
+			SELECT
+			users.email, 
+			users.password 
+			FROM users
+			WHERE "${email}" = users.email
+		`);
+		return user
+	}
+	catch(err){
+		const error = new Error("INVALID_DATA_INPUT");
+		error.statusCode = 500;
+		throw error;
+	}
+}
+
 
 
 module.exports = {
-	createUser
+	createUser,
+	signIn
 };
