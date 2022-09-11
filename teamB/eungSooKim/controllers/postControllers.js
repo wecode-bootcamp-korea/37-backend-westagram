@@ -1,8 +1,9 @@
 const postService = require("../services/postService");
 
-const writePost = async (req, res) => {
+const writePost = async (req, res, err) => {
   try {
     const { title, content, userId } = req.body;
+
 
     if (!title || !content || !userId) {
       return res.status(400).json({ message: "KEY_ERROR" });
@@ -13,8 +14,9 @@ const writePost = async (req, res) => {
       message: "postingCreated",
     });
   } catch (err) {
-    console.log(err);
-    return res.status(err.statusCode || 500).json({ message: err.message });
+    return await res
+      .status(err.statusCode || 500)
+      .json({ message: err.message });
   }
 };
 

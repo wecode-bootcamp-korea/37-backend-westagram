@@ -1,6 +1,6 @@
 const { database } = require("./data-source");
 
-const writePost = async (title, content, userId) => {
+const writePost = async (title, content, userId2) => {
   try {
     return await database.query(
       `INSERT INTO posts(
@@ -9,7 +9,7 @@ const writePost = async (title, content, userId) => {
             user_id
         ) VALUES (?, ?, ?);
 		`,
-      [title, content, userId]
+      [title, content, userId2]
     );
   } catch (err) {
     const error = new Error("INVALID_DATA_INPUT");

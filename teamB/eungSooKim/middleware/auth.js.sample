@@ -1,0 +1,15 @@
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
+
+const accessToken = async (req, res, next) => {
+  try {
+    const token = await req.headers.authorization;
+    jwt.verify( token ,"yourSecretKey" , option, callback)
+    console.log(token)
+    if (req){
+    await next();}
+  } catch (err) {
+    next(err);
+  }
+};
+module.exports = accessToken;

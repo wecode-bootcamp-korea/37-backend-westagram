@@ -2,7 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudio,visualstudiocode,vim,macos,zsh,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,visualstudio,visualstudiocode,vim,macos,zsh,linux
 
-
+middleware/auth.js
 db/schema.sql
 
 ### Linux ###

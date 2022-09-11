@@ -1,4 +1,3 @@
-const { SimpleConsoleLogger } = require("typeorm");
 const { database } = require("./data-source");
 
 const signUp = async (name, email, hashedPassword, profileImage) => {

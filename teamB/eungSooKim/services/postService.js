@@ -1,7 +1,8 @@
 const postDao = require("../models/postDao");
 
-const writePost = async (title, content, userId) => {
-  const writePost = await postDao.writePost(title, content, userId);
+const writePost = async (title, content, userId2) => {
+  const writePost = await postDao.writePost(title, content, userId2);
+
   return writePost;
 };
 
