@@ -7,9 +7,11 @@ const postPost = async (req, res) => {
     return res.status(201).json({ result : post})
 }
 
+//limit offset => req.query 수정 필요
 const getPosts = async (req, res) => {
-    const posts = await postService.getPosts()
-
+    const { limit, offset } = req.body
+    if (limit > 100) throw new Error("too Many")
+    const posts = await postService.getPosts(parseInt(limit), parseInt(offset))
     return res.status(200).json({ result : posts})
 }
 

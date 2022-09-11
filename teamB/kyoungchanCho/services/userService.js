@@ -2,6 +2,7 @@ const { userDao } = require('../models/');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+//정규표현식 관련 에러 비즈니스로직에 추가
 const signUp = async (name, email, profileImage, password) => {
     const saltRounds = 10;
     const makeHash = async (password, saltRounds) => { 

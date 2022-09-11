@@ -1,5 +1,6 @@
 const { userService } = require('../services')
 
+//키에러 추가
 const signUp = async (req, res) => {
     const { name, email, profileImage, password } = req.body;
     const user = await userService.signUp(name, email, profileImage, password);

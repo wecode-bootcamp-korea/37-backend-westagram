@@ -4,8 +4,8 @@ const postPost = async (title, content, userId) => {
     return await postDao.postPost(title, content, userId);
 }
 
-const getPosts = async () => {
-    return await postDao.getPosts();
+const getPosts = async (limit, offset) => {
+    return await postDao.getPosts(limit, offset);
 }
 
 const getPostsByUser = async ( userId ) => {

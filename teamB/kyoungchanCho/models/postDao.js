@@ -12,10 +12,12 @@ const postPost = async (title, content, userId) => {
     );
 }
 
-const getPosts = async () => {
+const getPosts = async (limit, offset) => {    
     return await database.query(
-        `SELECT * FROM posts;
-        `
+        `SELECT * FROM posts
+        LIMIT ? OFFSET ?
+        `,
+        [limit, offset]
     );
 };
 
@@ -35,6 +37,7 @@ const getPostsByUser = async ( userId ) => {
     );        
 }
 
+//delete, update시 affectedrows 확인! 후에 롤백 (only RDMBS)
 const patchPost = async ( title, postId) => {
     return await database.query(
         `UPDATE posts SET

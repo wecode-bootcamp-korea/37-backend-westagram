@@ -1,5 +1,6 @@
 const database = require('./DataSource')
 
+//return id 필수
 const postUser = async (name, email, profileImage, password) => {
     const user = await database.query(
         `INSERT INTO users(
