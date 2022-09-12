@@ -6,6 +6,11 @@ const makeHash = async (password, saltRounds) => {
   return await bcrypt.hash(password, saltRounds); 
 }
 
+const checkHash = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+  
+}
+
 
 const signUp = async (name, email, profileImage, password) => {
   const pwValidation = new RegExp(
@@ -18,7 +23,10 @@ const signUp = async (name, email, profileImage, password) => {
   }
 
   const hashedPassword = await makeHash(password, 10);
-  console.log(hashedPassword);
+  console.log('hashedPassword');
+  const result = await checkHash(password, hashedPassword);
+  console.log(result);
+
   const createUser = await userDao.createUser(
     name,
     email,
@@ -43,9 +51,10 @@ const signIn = async (email, password) => {
     err.statusCode = 404;
     throw err;
   }
-  const result = (password === user.password)
-
-  if (!result) {
+  const checkPassword = await checkHash(password, user.password);
+  // const result = (password === user.password)
+  
+  if (!checkPassword) {
     const err = new Error("invalid password");
     err.statusCode = 400;
     throw err;
