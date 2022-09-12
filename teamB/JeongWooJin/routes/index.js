@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 
 const userRouter = require("./userRouter");
 const postRouter = require("./postRouter");
@@ -11,12 +11,3 @@ router.use("/posts", postRouter.router);
 router.use("/createLikes", likeRouter.router);
 
 module.exports = router;
-
-
-
-
-
-
-
-
-
